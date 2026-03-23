@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:obserberLm.controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="obserberLm.controls.StatusControl">
+    <Grid>
+
+      
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:CurlControl Grid.Row="0" Margin="5,5,5,0"  x:Name="CurrentControlCore" />
+        <!-- json текстовое поле --> 
+        <TextBox Grid.Row="1" 
+                 Margin="5"
+                 x:Name="TextBoxStatus"
+                 Padding="20"
+                 IsReadOnly="True"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 FontSize="16"
+                 FontWeight="DemiBold"
+                 
+                 ToolTip.Tip="JSON-ответ от сервера" />
+
+       
+       
+    </Grid>
+</UserControl>

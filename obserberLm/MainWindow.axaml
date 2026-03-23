@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="obserberLm.MainWindow"
+        Title="obserberLm">
+    <Grid ShowGridLines="False" Margin="0">
+        <!-- Определяем структуру сетки -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Строка под высоту контента -->
+            <RowDefinition Height="*"/>   <!-- Отступ между строками -->
+           
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5,10,5">
+            <Button Tag="b1"  Width="100" Click="Button_OnClick">Init</Button>
+            <Button Tag="b2" Width="100" Click="Button_OnClick">Status</Button>
+            <Button Tag="bst" Width="100" Click="Button_OnClick">Stats</Button>
+            <Button Tag="bconfig" Width="100" Click="Button_OnClick">Config</Button>
+            <Button Tag="b3" Width="100" Click="Button_OnClick">Log</Button>
+            <Button Tag="b4" Width="100" Click="Button_OnClick">Settings</Button>
+        </StackPanel>
+        <ContentControl Grid.Row="1" Name="ContentControlHost"></ContentControl>
+        <ProgressBar Grid.Row="1" Name="LoadingBar"
+                     IsIndeterminate="True" 
+                     IsVisible="False"
+                     Width="50" Height="50"/>
+        
+    </Grid>
+</Window>
