@@ -9,6 +9,13 @@
         <entry key="AvaloniaApplication1/controls/LogControl.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
         <entry key="AvaloniaApplication1/controls/SettingsControl.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
         <entry key="AvaloniaApplication1/controls/StatusControl.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
+        <entry key="obserberLm/App.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/MainWindow.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/controls/CurlControl.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/controls/LogControl.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/controls/LogControl2.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/controls/SettingsControl.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="obserberLm/controls/StatusControl.axaml" value="obserberLm/obserberLm.csproj" />
       </map>
     </option>
   </component>

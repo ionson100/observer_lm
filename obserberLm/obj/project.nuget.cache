@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "OEAaGk99CfQ=",
+  "dgSpecHash": "/ldkwRVVW3c=",
   "success": true,
   "projectFilePath": "/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/obserberLm.csproj",
   "expectedPackageFiles": [
@@ -20,6 +20,7 @@
     "/home/bsr/.nuget/packages/avalonia.win32/11.3.12/avalonia.win32.11.3.12.nupkg.sha512",
     "/home/bsr/.nuget/packages/avalonia.x11/11.3.12/avalonia.x11.11.3.12.nupkg.sha512",
     "/home/bsr/.nuget/packages/dialoghost.avalonia/0.8.1/dialoghost.avalonia.0.8.1.nupkg.sha512",
+    "/home/bsr/.nuget/packages/dynamicdata/9.4.1/dynamicdata.9.4.1.nupkg.sha512",
     "/home/bsr/.nuget/packages/harfbuzzsharp/8.3.1.1/harfbuzzsharp.8.3.1.1.nupkg.sha512",
     "/home/bsr/.nuget/packages/harfbuzzsharp.nativeassets.linux/8.3.1.1/harfbuzzsharp.nativeassets.linux.8.3.1.1.nupkg.sha512",
     "/home/bsr/.nuget/packages/harfbuzzsharp.nativeassets.macos/8.3.1.1/harfbuzzsharp.nativeassets.macos.8.3.1.1.nupkg.sha512",
@@ -28,12 +29,18 @@
     "/home/bsr/.nuget/packages/messagebox.avalonia/3.3.1.1/messagebox.avalonia.3.3.1.1.nupkg.sha512",
     "/home/bsr/.nuget/packages/microcom.runtime/0.11.0/microcom.runtime.0.11.0.nupkg.sha512",
     "/home/bsr/.nuget/packages/newtonsoft.json/13.0.5-beta1/newtonsoft.json.13.0.5-beta1.nupkg.sha512",
+    "/home/bsr/.nuget/packages/reactiveui/23.1.8/reactiveui.23.1.8.nupkg.sha512",
     "/home/bsr/.nuget/packages/skiasharp/2.88.9/skiasharp.2.88.9.nupkg.sha512",
     "/home/bsr/.nuget/packages/skiasharp.nativeassets.linux/2.88.9/skiasharp.nativeassets.linux.2.88.9.nupkg.sha512",
     "/home/bsr/.nuget/packages/skiasharp.nativeassets.macos/2.88.9/skiasharp.nativeassets.macos.2.88.9.nupkg.sha512",
     "/home/bsr/.nuget/packages/skiasharp.nativeassets.webassembly/2.88.9/skiasharp.nativeassets.webassembly.2.88.9.nupkg.sha512",
     "/home/bsr/.nuget/packages/skiasharp.nativeassets.win32/2.88.9/skiasharp.nativeassets.win32.2.88.9.nupkg.sha512",
+    "/home/bsr/.nuget/packages/splat/19.3.1/splat.19.3.1.nupkg.sha512",
+    "/home/bsr/.nuget/packages/splat.builder/19.3.1/splat.builder.19.3.1.nupkg.sha512",
+    "/home/bsr/.nuget/packages/splat.core/19.3.1/splat.core.19.3.1.nupkg.sha512",
+    "/home/bsr/.nuget/packages/splat.logging/19.3.1/splat.logging.19.3.1.nupkg.sha512",
     "/home/bsr/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512",
+    "/home/bsr/.nuget/packages/system.reactive/6.1.0/system.reactive.6.1.0.nupkg.sha512",
     "/home/bsr/.nuget/packages/tmds.dbus.protocol/0.21.2/tmds.dbus.protocol.0.21.2.nupkg.sha512"
   ],
   "logs": []

@@ -13,7 +13,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        ContentControlHost.Content = new LogControl();
+        ContentControlHost.Content = new LogControl2();
     }
 
     private async void Button_OnClick(object? sender, RoutedEventArgs e)
@@ -105,7 +105,7 @@ public partial class MainWindow : Window
             case "b3":
             {
                 Dispose();
-                ContentControlHost.Content=new LogControl();
+                ContentControlHost.Content=new LogControl2();
                 break;
             }
             case "b4":

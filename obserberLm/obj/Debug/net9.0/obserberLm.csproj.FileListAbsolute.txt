@@ -75,3 +75,11 @@
 /home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/obj/Debug/net9.0/obserberLm.pdb
 /home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/obj/Debug/net9.0/obserberLm.genruntimeconfig.cache
 /home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/obj/Debug/net9.0/ref/obserberLm.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/obj/Debug/net9.0/obserberLm.sourcelink.json
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/DynamicData.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/ReactiveUI.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/Splat.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/Splat.Builder.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/Splat.Core.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/Splat.Logging.dll
+/home/bsr/RiderProjects/AvaloniaApplication1/obserberLm/bin/Debug/net9.0/System.Reactive.dll

@@ -17,21 +17,11 @@
         <!-- Верхняя панель: Лог 1 -->
         <Border Grid.Row="0" Background="#1e1e1e">
             <ListBox 
+                Classes="myList"
                 SelectionMode="Multiple"
-                     Name="ListBox1"
-                     Background="Transparent" 
-                     Foreground="#d4d4d4" FontSize="12">
-                <ListBox.Styles>
-                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-                        <Setter Property="Background" Value="Gray" />
-                        <Setter Property="Foreground" Value="White" />
-                    </Style>
-                    <!-- Селектор: когда курсор над ListBoxItem, меняем фон у его ContentPresenter -->
-                    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                        <Setter Property="Background" Value="Gray" /> <!-- Укажите нужный цвет -->
-                        <Setter Property="Foreground" Value="White" /> <!-- Цвет текста при наведении (опционально) -->
-                    </Style>
-                </ListBox.Styles>
+                Name="ListBox1"
+                Background="Transparent" 
+                Foreground="#d4d4d4" FontSize="12">
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Копировать" Click="CopyMenuItem_Click" />
@@ -46,21 +36,13 @@
 
         <Border Grid.Row="2" Background="#1e1e1e">
             <ListBox 
+                Classes="myList"
                 SelectionMode="Multiple"
                 Name="ListBox2"
                 Background="Transparent" 
                 Foreground="#d4d4d4" FontSize="12">
-                <ListBox.Styles>
-                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-                        <Setter Property="Background" Value="Gray" />
-                        <Setter Property="Foreground" Value="White" />
-                    </Style>
-                    <!-- Селектор: когда курсор над ListBoxItem, меняем фон у его ContentPresenter -->
-                    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                        <Setter Property="Background" Value="Gray" /> <!-- Укажите нужный цвет -->
-                        <Setter Property="Foreground" Value="White" /> <!-- Цвет текста при наведении (опционально) -->
-                    </Style>
-                </ListBox.Styles>
+               
+                
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Копировать" Click="CopyMenuItem_Click" />

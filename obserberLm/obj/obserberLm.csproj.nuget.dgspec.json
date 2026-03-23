@@ -72,6 +72,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.5-beta1, )"
+            },
+            "ReactiveUI": {
+              "target": "Package",
+              "version": "[23.1.8, )"
             }
           },
           "imports": [
