@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
@@ -6,13 +7,13 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using DynamicData;
 
 namespace obserberLm.controls;
 
 public partial class LogControl2 : UserControl,IDisposable
 {
-    public static readonly StyledProperty<string?> FilePathProperty =
+    private static readonly StyledProperty<string?> FilePathProperty =
         AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath));
 
     public string? FilePath
@@ -30,7 +31,7 @@ public partial class LogControl2 : UserControl,IDisposable
     public LogControl2()
     {
         InitializeComponent();
-        FilePath = "/var/log/syslog";//"regime/yenisei.log";
+        FilePath = "C:\\Program Files\\Regime\\var\\log\\yenisei.log";//"regime/yenisei.log";
         List.ItemsSource = Lines;
         DataContext = this;
 
@@ -47,13 +48,13 @@ public partial class LogControl2 : UserControl,IDisposable
 
         _service = new LogTailService(path);
 
-        _service.OnLine += line =>
+        _service.OnLines += line =>
         {
             if (_paused) return;
 
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                Lines.Add(line);
+                Lines.AddRange(line);
 
                 if (Lines.Count > 2000)
                     Lines.RemoveAt(0);
@@ -89,13 +90,13 @@ public class LogTailService(string filePath)
 {
     private long _position;
 
-    public event Action<string>? OnLine;
+    public event Action<List<string>>? OnLines;
 
     public void Start(CancellationToken token)
     {
         Task.Run(async () =>
         {
-            _position = new FileInfo(filePath).Length;
+            _position = GetPositionForLastLines(filePath, 100);
 
             while (!token.IsCancellationRequested)
             {
@@ -104,20 +105,56 @@ public class LogTailService(string filePath)
                 var fi = new FileInfo(filePath);
                 if (fi.Length < _position)
                     _position = 0;
+                
 
                 if (fi.Length > _position)
                 {
+                    var newLines = new List<string>(); // Буфер для пачки строк
+
                     await using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     fs.Seek(_position, SeekOrigin.Begin);
-
                     using var sr = new StreamReader(fs);
 
                     while (await sr.ReadLineAsync(token) is { } line)
-                        OnLine?.Invoke(line);
+                    {
+                        newLines.Add(line);
+                    }
+
+                    // 2. Вызываем событие один раз для всего списка (если есть данные)
+                    if (newLines.Count > 0)
+                    {
+                        OnLines?.Invoke(newLines);
+                    }
+
+                    _position = fs.Position;
 
                     _position = fs.Position;
                 }
             }
         }, token);
+    }
+    private long GetPositionForLastLines(string path, int lineCount)
+    {
+        var fi = new FileInfo(path);
+        if (!fi.Exists || fi.Length == 0) return 0;
+
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var sr = new StreamReader(fs);
+    
+        // Простая стратегия: читаем файл с конца по частям (буферами), считая переносы строк
+        var lines = new List<long>();
+        fs.Seek(0, SeekOrigin.Begin);
+    
+        // Чтобы не перегружать память, если файл огромный, 
+        // в идеале нужно читать файл с конца. 
+        // Но для логов проще всего быстро пробежаться по индексам строк:
+        long pos = 0;
+        while (sr.ReadLine() != null)
+        {
+            lines.Add(pos);
+            pos = fs.Position;
+        }
+
+        return lines.Count <= lineCount ? 0 : lines[^lineCount];
     }
 }
