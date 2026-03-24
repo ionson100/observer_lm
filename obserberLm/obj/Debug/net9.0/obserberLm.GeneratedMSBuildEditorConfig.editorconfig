@@ -15,29 +15,41 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = obserberLm
-build_property.ProjectDir = C:\Users\123\RiderProjects\observer_lm\obserberLm\
+build_property.ProjectDir = C:\Users\Admin\RiderProjects\observer_lm\obserberLm\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/App.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/controls/CurlControl.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/controlSale/SaleInnerControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/controls/LogControl.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/CurlControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/controls/LogControl2.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/dialogs/ErrorWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/controls/SettingsControl.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/dialogs/HelpDialog.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/controls/StatusControl.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/LogControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/123/RiderProjects/observer_lm/obserberLm/MainWindow.axaml]
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/LogControl2.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/SaleControl.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/SettingsControl.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/controls/StatusControl.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/Admin/RiderProjects/observer_lm/obserberLm/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

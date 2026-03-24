@@ -1,160 +1,153 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using DynamicData;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace obserberLm.controls;
 
 public partial class LogControl2 : UserControl,IDisposable
 {
-    private static readonly StyledProperty<string?> FilePathProperty =
-        AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath));
+    private static readonly StyledProperty<string?> FilePathProperty1 = AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath1));
+    private static readonly StyledProperty<string?> FilePathProperty2 = AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath2));
 
-    public string? FilePath
+    public string? FilePath1
     {
-        get => GetValue(FilePathProperty);
-        set => SetValue(FilePathProperty, value);
+        get => GetValue(FilePathProperty1);
+        set => SetValue(FilePathProperty1, value);
+    }
+    public string? FilePath2
+    {
+        get => GetValue(FilePathProperty2);
+        set => SetValue(FilePathProperty2, value);
     }
 
-    public ObservableCollection<string> Lines { get; } = new();
+    private ObservableCollection<string> Lines1 { get; } = new();
+    private ObservableCollection<string> Lines2 { get; } = new();
 
-    private LogTailService? _service;
-    private CancellationTokenSource? _cts;
-    private bool _autoScroll = true;
-    private bool _paused;
+    private LogTailService? _service1;
+    private LogTailService? _service2;
+    private CancellationTokenSource? _cts1;
+    private CancellationTokenSource? _cts2;
+    private readonly MySettings? _mySettings = MySettings.GetSettings();
+    
+   
     public LogControl2()
     {
         InitializeComponent();
-        FilePath = "C:\\Program Files\\Regime\\var\\log\\yenisei.log";//"regime/yenisei.log";
-        List.ItemsSource = Lines;
+        if(_mySettings==null) return;
+       
+        FilePath1 = System.IO.Path.Combine(_mySettings.FolderLog,"regime.log");
+        FilePath2 = System.IO.Path.Combine(_mySettings.FolderLog,"yenisei.log");
+        
+        ListBox1.ItemsSource = Lines1;
+        ListBox2.ItemsSource = Lines2;
         DataContext = this;
-
-        this.GetObservable(FilePathProperty).Subscribe(path =>
+        this.GetObservable(FilePathProperty1).Subscribe(path =>
         {
             if (!string.IsNullOrEmpty(path))
-                Start(path);
+                Start(path,_cts1! ,Lines1,_service1,ListBox1,_mySettings.Tail);
+        });
+
+        this.GetObservable(FilePathProperty2).Subscribe(path =>
+        {
+            if (!string.IsNullOrEmpty(path))
+                Start(path,_cts2! ,Lines2,_service2,ListBox2,_mySettings.Tail);
         });
     }
-    private void Start(string path)
+    private static void Start(string path,CancellationTokenSource?  cts,ObservableCollection<string> lines,LogTailService? service,ListBox listBox,int tail)
     {
-        _cts?.Cancel();
-        _cts = new CancellationTokenSource();
+        // Task.Run(async () =>
+        // {
+        //     await Task.Delay(3000); // Ждем 3 секунды
+        //
+        //     // Возвращаемся в UI-поток для выполнения кода
+        //     await Dispatcher.UIThread.InvokeAsync(() =>
+        //     {
+        //         listBox.ScrollIntoView(lines[^1]);
+        //        
+        //     });
+        // });
+        cts?.Cancel();
+        cts = new CancellationTokenSource();
 
-        _service = new LogTailService(path);
+        service = new LogTailService(path);
 
-        _service.OnLines += line =>
+        service.OnLines += line =>
         {
-            if (_paused) return;
+            
 
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
             {
-                Lines.AddRange(line);
+                lines.AddRange(line);
 
-                if (Lines.Count > 2000)
-                    Lines.RemoveAt(0);
+                if (lines.Count > 2000)
+                    lines.RemoveAt(0);
 
-                if (_autoScroll && List.ItemCount > 0)
-                    List.ScrollIntoView(Lines[^1]);
+                if (listBox.ItemCount > 0)
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        listBox.ScrollIntoView(lines[^1]);
+               
+                    });
+                    //listBox.ScrollIntoView(lines[^1]);
+              
+             
+
             });
         };
 
-        _service.Start(_cts.Token);
+        service.Start(cts.Token,tail);
     }
 
 
-    private void OnPauseClick(object? sender, RoutedEventArgs e)
-    {
-        _paused = !_paused;
-    }
 
-    private void OnClearClick(object? sender, RoutedEventArgs e)
-    {
-        Lines.Clear();
-    }
 
     public void Dispose()
     {
-        _cts?.Cancel();
+        
+        _cts1?.Cancel();
+        _cts2?.Cancel();
      
-        _cts?.Dispose();
+        _cts1?.Dispose();
+        _cts2?.Dispose();
+        
       
     }
-}
-public class LogTailService(string filePath)
-{
-    private long _position;
 
-    public event Action<List<string>>? OnLines;
-
-    public void Start(CancellationToken token)
+    private async void CopyMenuItem_Click(object? sender, RoutedEventArgs e)
     {
-        Task.Run(async () =>
+        try
         {
-            _position = GetPositionForLastLines(filePath, 100);
+            var lifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+            var clipboard = lifetime?.MainWindow?.Clipboard;
 
-            while (!token.IsCancellationRequested)
-            {
-                await Task.Delay(300, token);
-
-                var fi = new FileInfo(filePath);
-                if (fi.Length < _position)
-                    _position = 0;
-                
-
-                if (fi.Length > _position)
-                {
-                    var newLines = new List<string>(); // Буфер для пачки строк
-
-                    await using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    fs.Seek(_position, SeekOrigin.Begin);
-                    using var sr = new StreamReader(fs);
-
-                    while (await sr.ReadLineAsync(token) is { } line)
-                    {
-                        newLines.Add(line);
-                    }
-
-                    // 2. Вызываем событие один раз для всего списка (если есть данные)
-                    if (newLines.Count > 0)
-                    {
-                        OnLines?.Invoke(newLines);
-                    }
-
-                    _position = fs.Position;
-
-                    _position = fs.Position;
-                }
+            if (ListBox1.SelectedItems is { Count: > 0 } && clipboard!=null)
+            { 
+                var lines = ListBox1.SelectedItems.Cast<object>().Select(item => item.ToString()); 
+                string textToCopy = string.Join(Environment.NewLine, lines); 
+                await clipboard.SetTextAsync(textToCopy);
             }
-        }, token);
-    }
-    private long GetPositionForLastLines(string path, int lineCount)
-    {
-        var fi = new FileInfo(path);
-        if (!fi.Exists || fi.Length == 0) return 0;
-
-        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        using var sr = new StreamReader(fs);
-    
-        // Простая стратегия: читаем файл с конца по частям (буферами), считая переносы строк
-        var lines = new List<long>();
-        fs.Seek(0, SeekOrigin.Begin);
-    
-        // Чтобы не перегружать память, если файл огромный, 
-        // в идеале нужно читать файл с конца. 
-        // Но для логов проще всего быстро пробежаться по индексам строк:
-        long pos = 0;
-        while (sr.ReadLine() != null)
-        {
-            lines.Add(pos);
-            pos = fs.Position;
+            if (ListBox2.SelectedItems is { Count: > 0 } && clipboard!=null)
+            {
+             
+                var lines = ListBox2.SelectedItems.Cast<object>().Select(item => item.ToString());
+                string textToCopy = string.Join(Environment.NewLine, lines);
+                await clipboard.SetTextAsync(textToCopy);
+             
+            }
         }
-
-        return lines.Count <= lineCount ? 0 : lines[^lineCount];
+        catch (Exception ex)
+        {
+            MessageBoxManager.GetMessageBoxStandard("Ошибка копирования", ex.Message,  ButtonEnum.Ok);
+        }
     }
 }

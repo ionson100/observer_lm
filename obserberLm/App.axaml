@@ -28,14 +28,16 @@
         </Style>
         
         <Style Selector="ListBox.myList ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#2b2929" />
+            <Setter Property="Background" Value="#494646" />
             <Setter Property="Foreground" Value="White" />
         </Style>
 
         <Style Selector="ListBox.myList ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#2b2929" />
+            <Setter Property="Background" Value="#494646" />
             <Setter Property="Foreground" Value="White" />
         </Style>
+        
+       
         
         
         

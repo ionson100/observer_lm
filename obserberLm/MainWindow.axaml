@@ -6,10 +6,10 @@
         x:Class="obserberLm.MainWindow"
         Title="obserberLm">
     <Grid ShowGridLines="False" Margin="0">
-        <!-- Определяем структуру сетки -->
+       
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Строка под высоту контента -->
-            <RowDefinition Height="*"/>   <!-- Отступ между строками -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>   
            
         </Grid.RowDefinitions>
 
@@ -20,6 +20,8 @@
             <Button Tag="bconfig" Width="100" Click="Button_OnClick">Config</Button>
             <Button Tag="b3" Width="100" Click="Button_OnClick">Log</Button>
             <Button Tag="b4" Width="100" Click="Button_OnClick">Settings</Button>
+            <Button Tag="bsale" Width="100" Click="Button_OnClick">Sale</Button>
+            <Button Tag="bhelp" Width="100" Click="Button_OnClick">Help</Button>
         </StackPanel>
         <ContentControl Grid.Row="1" Name="ContentControlHost"></ContentControl>
         <ProgressBar Grid.Row="1" Name="LoadingBar"

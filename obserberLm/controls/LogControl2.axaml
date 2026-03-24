@@ -4,23 +4,57 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="obserberLm.controls.LogControl2">
-    <Grid RowDefinitions="Auto,*">
-        
-        <!-- Toolbar -->
-        <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Pause" Click="OnPauseClick"/>
-            <Button Content="Clear" Click="OnClearClick"/>
-        </StackPanel>
+    <Grid x:Name="Definition" >
+        <Grid.RowDefinitions>
+            <!-- Верхняя панель. Height установим из кода при загрузке -->
+            <RowDefinition Height="1*" MinHeight="50"/> 
+            <RowDefinition Height="Auto"/> <!-- Для сплиттера -->
+            <RowDefinition Height="1*" MinHeight="50"/> <!-- Нижняя панель -->
+        </Grid.RowDefinitions>
+     
 
-        <!-- Log -->
-        <ListBox x:Name="List"
-                 Grid.Row="1"
-                 
-                 SelectionMode="Multiple"
-                 FontFamily="Consolas"
-                 FontSize="12"
-                 
-                 />
+        <!-- Верхняя панель: Лог 1 -->
+        <Border Grid.Row="0" Background="#1e1e1e">
+            <ListBox 
+                
+                Classes="myList"
+                SelectionMode="Multiple"
+                Name="ListBox1"
+                Background="Transparent" 
+                Foreground="#d4d4d4" FontSize="12">
+                
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Копировать" Click="CopyMenuItem_Click" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Border>
+
+        <!-- Разделитель (горизонтальный) -->
+        <GridSplitter Grid.Row="1" Height="2" Background="#2B083308" 
+                      HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
+
+        <Border Grid.Row="2" Background="#1e1e1e">
+            <ListBox 
+                Classes="myList"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                SelectionMode="Multiple"
+                Name="ListBox2"
+                Background="Transparent" 
+                Foreground="#d4d4d4" FontSize="12">
+               
+                
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Копировать" Click="CopyMenuItem_Click" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </Border>
+       
+       
+       
     </Grid>
    
 </UserControl>

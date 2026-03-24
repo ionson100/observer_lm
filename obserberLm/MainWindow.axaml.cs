@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using obserberLm.controls;
+using obserberLm.controls.dialogs;
 
 namespace obserberLm;
 
@@ -112,6 +113,19 @@ public partial class MainWindow : Window
             {
                 Dispose();
                 ContentControlHost.Content = new SettingsControl();
+                break;
+            }
+            case "bhelp":
+            {
+                Dispose();
+                HelpDialog dialog=new HelpDialog();
+                await dialog.ShowDialog(this);
+                break;
+            }
+            case "bsale":
+            {
+                Dispose();
+                ContentControlHost.Content = new SaleControl();
                 break;
             }
         }
