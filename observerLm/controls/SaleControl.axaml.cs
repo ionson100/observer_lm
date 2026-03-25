@@ -1,0 +1,71 @@
+﻿using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
+using observerLm.controls.controlSale;
+using observerLm.controls.dialogs;
+
+namespace observerLm.controls;
+
+public partial class SaleControl : UserControl
+{
+
+
+    public SaleControl()
+    {
+       
+        InitializeComponent();
+        ContentControlHost.Content = new SaleInnerControl(SalesType.Sales);
+    }
+
+   
+
+   
+
+    private async void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Button? button = (Button)sender!;
+        if (button.Tag != null)
+            switch (button.Tag.ToString())
+            {
+                case "bsale":
+                {
+                    ContentControlHost.Content = new SaleInnerControl(SalesType.Sales);
+                    break;
+                }
+                case "bsalereturn":
+                {
+                    ContentControlHost.Content = new SaleInnerControl(SalesType.ReturnSales);
+                    break;
+                }
+                case "bsalecheck":
+                {
+                    ContentControlHost.Content = new SaleInnerControl(SalesType.CheckSales);
+                    break;
+                }
+                case "bsalelist":
+                {
+                    CodeDialog dialog = new CodeDialog();
+                    var topLevel = TopLevel.GetTopLevel(this);
+                    var result = await dialog.ShowDialog<bool?>(topLevel as Window);
+                    if (result == true)
+                    {
+                        LoadingBar.IsVisible = true;
+                        try
+                        {
+                            await new MyStatusInit().RequestPiotAsync(
+                                $"cis/sold?skip={dialog.Skip}&limit={dialog.Limit}",
+                                (s, s1) => { ContentControlHost.Content = new StatusControl(s, s1); });
+                        }
+                        finally
+                        {
+                            LoadingBar.IsVisible = false;
+                        }
+                    }
+
+                    break;
+                }
+            }
+    }
+}

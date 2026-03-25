@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=ObserverLm
+Exec=/usr/lib/observer_lm/observerLm
+Path=/usr/lib/observer_lm
+Icon=observerLm
+Type=Application
+Categories=Utility;

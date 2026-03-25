@@ -1,0 +1,7 @@
+Package: observerLm
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: ion100 <ionson100@gmail.com>
+Description: ObserverLm application

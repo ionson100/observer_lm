@@ -1,0 +1,10 @@
+#!/bin/bash
+
+chmod +x /usr/lib/observer_lm/observerLm
+chmod -R 777 /usr/lib/observer_lm
+export DISPLAY=:0
+update-desktop-database /usr/share/applications
+
+echo "ObserverLm installed successfully"
+
+exit 0

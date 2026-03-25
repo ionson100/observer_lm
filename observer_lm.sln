@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obserberLm", "obserberLm\obserberLm.csproj", "{64931C86-DF8D-4B41-9C68-E919238D0EE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "observerLm", "observerLm\observerLm.csproj", "{64931C86-DF8D-4B41-9C68-E919238D0EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

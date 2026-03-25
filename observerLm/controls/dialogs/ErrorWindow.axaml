@@ -1,0 +1,33 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="observerLm.controls.dialogs.ErrorWindow_"
+        Title="Произошла ошибка"
+        Width="450" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False" Padding="20">
+        <StackPanel Spacing="15">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                        <!-- Простая красная точка как индикатор ошибки -->
+                        <Ellipse Width="16" Height="16" Fill="Red" VerticalAlignment="Center"/>
+                        <TextBlock Text="В приложении возникла ошибка:" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Поле с текстом ошибки (можно копировать) -->
+                <Border Background="#1A000000" CornerRadius="4" Padding="5">
+                        <ScrollViewer MaxHeight="200">
+                                <SelectableTextBlock x:Name="ErrorText" 
+                                                     TextWrapping="Wrap" 
+                                                     FontSize="12"
+                                                     Foreground="#D32F2F"/>
+                        </ScrollViewer>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                        <Button Content="Копировать текст" Click="CopyError_Click" IsDefault="True"/>
+                        <Button Content="Закрыть" Click="Close_Click" />
+                </StackPanel>
+        </StackPanel>
+</Window>

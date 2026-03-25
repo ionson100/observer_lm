@@ -1,0 +1,8 @@
+Package: myapp
+Version: 1.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Your Name <email@example.com>
+Description: My application
+ Some description of your app

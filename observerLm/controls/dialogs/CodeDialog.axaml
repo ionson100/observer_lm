@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="observerLm.controls.dialogs.CodeDialog"
+       
+        Title="CodeDialog"
+        Width="300" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Padding="10">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock
+                
+                Text="Пропустить (Skip):" 
+                FontSize="18" 
+                Margin="0,0,0,5" 
+                FontWeight="DemiBold"/>
+            <TextBox 
+              
+                x:Name="TxtSkip" 
+                Padding="5"  />
+
+            <TextBlock 
+                Text="Лимит (Limit: 1 - 1000):" FontSize="18" Margin="0,15,0,5" FontWeight="DemiBold"/>
+            <TextBox 
+               
+                x:Name="TxtLimit"  
+                Padding="5"    />
+            
+           
+
+            <Button  Content="Получить" Click="GetCodes_Click" Margin="0,25,0,0" Width="150"
+                     HorizontalAlignment="Center" 
+                    Height="35"  IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

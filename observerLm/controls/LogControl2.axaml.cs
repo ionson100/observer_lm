@@ -1,0 +1,177 @@
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
+using DynamicData;
+using MsBox.Avalonia;
+
+namespace observerLm.controls;
+
+public partial class LogControl2 : UserControl,IDisposable
+{
+    private static readonly StyledProperty<string?> FilePathProperty1 = AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath1));
+    private static readonly StyledProperty<string?> FilePathProperty2 = AvaloniaProperty.Register<LogControl2, string?>(nameof(FilePath2));
+
+    public string? FilePath1
+    {
+        get => GetValue(FilePathProperty1);
+        set => SetValue(FilePathProperty1, value);
+    }
+    public string? FilePath2
+    {
+        get => GetValue(FilePathProperty2);
+        set => SetValue(FilePathProperty2, value);
+    }
+
+    private ObservableCollection<string> Lines1 { get; } = new();
+    private ObservableCollection<string> Lines2 { get; } = new();
+
+ 
+    private readonly CancellationTokenSource _cts1=new CancellationTokenSource();
+    private readonly CancellationTokenSource _cts2=new CancellationTokenSource();
+    private readonly MySettings? _mySettings = MySettings.GetSettings();
+    
+   
+    public LogControl2()
+    {
+        InitializeComponent();
+        ListBox1.ItemsSource = Lines1;
+        ListBox2.ItemsSource = Lines2;
+        if (_mySettings == null)
+        {
+            Lines1.Add("Не найдены настройки программы. Папка settings не существует");
+            Lines2.Add(Lines1[0]);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_mySettings!.FolderLog))
+        {
+            Lines1.Add("Путь к папке логов пустой или отсутствует в настройках.");
+            Lines2.Add(Lines1[0]);
+            return;
+        }
+        
+       
+        FilePath1 = Path.Combine(_mySettings.FolderLog,"regime.log");
+        FilePath2 = Path.Combine(_mySettings.FolderLog,"yenisei.log");
+        
+       
+        DataContext = this;
+        this.GetObservable(FilePathProperty1).Subscribe(path =>
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                if (File.Exists(path))
+                {
+                    Start(path,_cts1 ,Lines1,ListBox1,_mySettings.Tail);
+                }
+                else
+                {
+                    Lines1.Add($"Файла нет:{path}");
+                }
+                
+            }
+                
+        });
+
+        this.GetObservable(FilePathProperty2).Subscribe(path =>
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                if (File.Exists(path))
+                {
+                    Start(path,_cts2 ,Lines2,ListBox2,_mySettings.Tail);
+                }
+                else
+                {
+                    Lines2.Add($"Файла нет:{path}");
+                }
+            }
+        });
+    }
+    private static void Start(string path,CancellationTokenSource?  cts,ObservableCollection<string> lines,ListBox listBox,int tail)
+    {
+        LogTailService service = new LogTailService(path);
+       
+        service.OnLines += line =>
+        {
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                try
+                {
+                    lines.AddRange(line);
+
+                    if (lines.Count > 2000)
+                        lines.RemoveAt(0);
+
+                    if (listBox.ItemCount > 0)
+                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            listBox.ScrollIntoView(lines[^1]);
+               
+                        });
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+               
+              
+             
+
+            });
+        };
+
+        if (cts != null) service.Start(cts.Token, tail);
+    }
+
+
+
+
+    public void Dispose()
+    {
+        
+        _cts1.Cancel();
+        _cts2.Cancel();
+     
+        _cts1.Dispose();
+        _cts2.Dispose();
+        
+      
+    }
+
+    private async void CopyMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var lifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+            var clipboard = lifetime?.MainWindow?.Clipboard;
+
+            if (ListBox1.SelectedItems is { Count: > 0 } && clipboard!=null)
+            { 
+                var lines = ListBox1.SelectedItems.Cast<object>().Select(item => item.ToString()); 
+                string textToCopy = string.Join(Environment.NewLine, lines); 
+                await clipboard.SetTextAsync(textToCopy);
+            }
+            if (ListBox2.SelectedItems is { Count: > 0 } && clipboard!=null)
+            {
+             
+                var lines = ListBox2.SelectedItems.Cast<object>().Select(item => item.ToString());
+                string textToCopy = string.Join(Environment.NewLine, lines);
+                await clipboard.SetTextAsync(textToCopy);
+             
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBoxManager.GetMessageBoxStandard("Ошибка копирования", ex.Message);
+        }
+    }
+}
