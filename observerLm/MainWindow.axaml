@@ -21,6 +21,7 @@
             <Button Tag="b3" Width="100" Click="Button_OnClick">Log</Button>
             <Button Tag="b4" Width="100" Click="Button_OnClick">Settings</Button>
             <Button Tag="bsale" Width="100" Click="Button_OnClick">Sale</Button>
+            <Button Tag="bservice" Width="100" Click="Button_OnClick">Services</Button>
             <Button Tag="bhelp" Width="100" Click="Button_OnClick">Help</Button>
         </StackPanel>
         <ContentControl Grid.Row="1" Name="ContentControlHost"></ContentControl>

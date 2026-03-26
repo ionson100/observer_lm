@@ -1,9 +1,12 @@
 ﻿using Avalonia;
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using observerLm.controls.dialogs;
 using Avalonia.FreeDesktop;
 using Avalonia.Platform;
+using Newtonsoft.Json;
 
 namespace observerLm;
 
@@ -22,6 +25,7 @@ class Program
 //         bin/Release/net9.0/linux-x64/yourapp_1.0.0_amd64.deb
 //dpkg-deb --build observerlm-deb "observerlm-deb_$(grep '^Version:' observerlm-deb/DEBIAN/control | awk '{print $2}').deb"
 // 
+//dpkg-deb --build observerlm-deb "observerlm-deb_$(grep '^Version:' observerlm-deb/DEBIAN/control | awk '{print $2}').deb"
     
     
     private static bool _isShowingError = false;
@@ -40,7 +44,7 @@ class Program
             LogException(e.Exception, "TaskScheduler");
             e.SetObserved(); // предотвращает падение приложения, если это возможно
         };
-
+        SettingsCreator();
         try
         {
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
@@ -48,6 +52,40 @@ class Program
         catch (Exception ex)
         {
             LogException(ex, "Main Loop");
+        }
+        
+    }
+
+    private static void SettingsCreator()
+    {
+        string configDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+            "observerLm" // Имя вашей программы
+        );
+        if (!Directory.Exists(configDir))
+        {
+            Directory.CreateDirectory(configDir);
+        }
+        string filePath = Path.Combine(configDir, "settings.json");
+        if (!File.Exists(filePath))
+        {
+            MySettings mySettings = new MySettings
+            {
+                Auth = "YWRtaW46YWRtaW4=",
+                Url = "http://localhost:5995/api/v2/",
+                Token = "97486293-646b-463e-8199-48c37e36d605",
+                Tail = 100
+            };
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+               mySettings.FolderLog ="C:\\Program Files\\Regime\\var\\log";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                mySettings.FolderLog ="/var/log/regime";
+            }
+            string jsonString = JsonConvert.SerializeObject(mySettings, Formatting.Indented);
+            File.WriteAllText(filePath, jsonString);
         }
     }
 

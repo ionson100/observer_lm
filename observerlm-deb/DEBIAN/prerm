@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "ObserverLm removed successfully"
+exit 0

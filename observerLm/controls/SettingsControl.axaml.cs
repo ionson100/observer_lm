@@ -77,7 +77,10 @@ public partial class SettingsControl : UserControl
                 _settings.Token= TxtToken.Text.Trim();
                 _settings.Url= TxtUrl.Text.Trim();
                 _settings.Tail= int.Parse(TxtTail.Text.Trim());
-                File.WriteAllText("settings/settings.json",JsonConvert.SerializeObject(_settings, Formatting.Indented));
+                string path = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+                    "observerLm","settings.json");
+                File.WriteAllText(path,JsonConvert.SerializeObject(_settings, Formatting.Indented));
 
                 MessageBoxManager.GetMessageBoxStandard("warning", "Save Settings",ButtonEnum.Ok).ShowAsync();
 

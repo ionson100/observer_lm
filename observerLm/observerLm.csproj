@@ -47,10 +47,6 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
         <PackageReference Include="ReactiveUI" Version="23.1.8" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <LinuxPostInstallScript Include="DEBIAN/postinst" />
-    </ItemGroup>
 
     <ItemGroup>
       <None Update="settings\settings.json">

@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:observerLm.controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="observerLm.controls.ServiceControlView"
+             x:DataType="controls:ServiceControlView">
+     <StackPanel Margin="20" Spacing="15" Width="420">
+        <TextBlock Text="Управление системными сервисами" 
+                   FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- Карточка сервиса REGIME -->
+        <Border Padding="15" Background="#F4F8F3" CornerRadius="8" BorderBrush="#333333" BorderThickness="1">
+            <DockPanel>
+                <StackPanel Spacing="5">
+                    <TextBlock Text="REGIME" FontSize="16" FontWeight="SemiBold" Foreground="Black"/>
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Ellipse Width="8" Height="8" VerticalAlignment="Center" 
+                                 Fill="{Binding RegimeStatusColor}"/>
+                        <TextBlock Text="{Binding RegimeStatus}" Foreground="#aaaaaa"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="8">
+                    <Button Foreground="Green" FontWeight="DemiBold" Tag="rstart" Content="START" Click="Button_OnClick" Width="70" HorizontalContentAlignment="Center"/>
+                    <Button Foreground="Red"   FontWeight="DemiBold" Tag="rstop" Content="STOP" Click="Button_OnClick" Width="70" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+        
+        
+
+      
+        <Border Padding="15" Background="#F4F8F3" CornerRadius="8" BorderBrush="#333333" BorderThickness="1">
+            <DockPanel>
+                <StackPanel Spacing="5">
+                    <TextBlock Text="YENISEI" FontSize="16" FontWeight="SemiBold" Foreground="Black"/>
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <Ellipse Width="8" Height="8" VerticalAlignment="Center" 
+                                 Fill="{Binding YeniseiStatusColor}"/>
+                        <TextBlock Text="{Binding YeniseiStatus}" Foreground="#aaaaaa"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="8">
+                    <Button Foreground="Green" FontWeight="DemiBold" Tag="ystart" Content="START" Click="Button_OnClick" Width="70" HorizontalContentAlignment="Center"/>
+                    <Button Foreground="Red"   FontWeight="DemiBold"  Tag="ystop" Content="STOP" Click="Button_OnClick" Width="70" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

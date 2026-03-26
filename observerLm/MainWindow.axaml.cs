@@ -117,15 +117,19 @@ public partial class MainWindow : Window
             }
             case "bhelp":
             {
-                Dispose();
-                HelpDialog dialog=new HelpDialog();
-                await dialog.ShowDialog(this);
+               BrowserHelper.OpenUrl("https://github.com/ionson100/observer_lm/help.html");
                 break;
             }
             case "bsale":
             {
                 Dispose();
                 ContentControlHost.Content = new SaleControl();
+                break;
+            }
+            case "bservice":
+            {
+                Dispose();
+                ContentControlHost.Content = new ServiceControlView();
                 break;
             }
         }

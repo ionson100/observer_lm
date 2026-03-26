@@ -36,11 +36,13 @@ public class MySettings
     {
         try
         {
-            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings", "settings.json");
+            string path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+                "observerLm","settings.json");
+            
             if (File.Exists(path))
             {
-                string str = File.ReadAllText(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings",
-                    "settings.json"));
+                string str = File.ReadAllText(path);
                 var settings = JsonConvert.DeserializeObject<MySettings>(str);
                 return settings;
             }
