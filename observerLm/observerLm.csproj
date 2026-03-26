@@ -21,8 +21,9 @@
     
          
           <DebianPackageCompression>none</DebianPackageCompression>
-           <DebCompressionMethod>none</DebCompressionMethod>
-  <ContentCompression>None</ContentCompression>
+          <DebCompressionMethod>none</DebCompressionMethod>
+  
+          <ContentCompression>None</ContentCompression>
          
          
          
@@ -49,7 +50,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="settings\settings.json">
+      
+      <None Update="help.html">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
@@ -62,8 +64,11 @@
       <Content Include="observerLm.desktop" CopyToPublishDirectory="PreserveNewest">
         <LinuxPath>/usr/share/applications/observerLm.desktop</LinuxPath>
       </Content>
-      <Content Include="observer.png" CopyToPublishDirectory="PreserveNewest">
+      <Content Include="observerLm.png" CopyToPublishDirectory="PreserveNewest">
         <LinuxPath>/usr/share/icons/observerLm.png</LinuxPath>
+      </Content>
+      <Content Include="help.html" CopyToPublishDirectory="PreserveNewest">
+        <LinuxPath>/usr/share/observerLm/help.html</LinuxPath>
       </Content>
     </ItemGroup>
     

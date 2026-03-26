@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -117,7 +119,12 @@ public partial class MainWindow : Window
             }
             case "bhelp":
             {
-               BrowserHelper.OpenUrl("https://github.com/ionson100/observer_lm/help.html");
+                string ?path=GetHelpFilePath();
+                if (!string.IsNullOrEmpty(path))
+                {
+                    string url = "file://" + path;
+                    BrowserHelper.OpenUrl(url);
+                }
                 break;
             }
             case "bsale":
@@ -132,8 +139,39 @@ public partial class MainWindow : Window
                 ContentControlHost.Content = new ServiceControlView();
                 break;
             }
+            case "bchecking":
+            {
+                Dispose();
+                ContentControlHost.Content = new CheckingControl();
+                break;
+            }
         }
         
+    }
+
+    private string? GetHelpFilePath()
+    {
+        string path="";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            // Путь для установленного .deb пакета
+            path= "/usr/share/observerLm/help.html";
+        }
+        else
+        {
+            // Для Windows (файл лежит рядом с .exe)
+            path= Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "help.html");
+        }
+
+        if (File.Exists(path))
+        {
+            return path;
+        }
+        else
+        {
+            MessageBoxManager.GetMessageBoxStandard("Ошибка", $"Файл справки не найден: '{path}'").ShowAsync();
+            return null;
+        }
     }
 
     void Dispose()

@@ -1,0 +1,41 @@
+name: Build and Release DEB
+
+on:
+  push:
+    tags:
+      - 'v*' # Срабатывает при создании тегов v1.0, v2.1.3 и т.д.
+  workflow_dispatch: # Позволяет запустить вручную для теста
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Важно для создания релиза и загрузки файлов
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Version from Tag
+        # Извлекает версию из тега (например, v1.2.3 -> 1.2.3) и записывает в control
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          sed -i "s/^Version: .*/Version: $VERSION/" observerlm-deb/DEBIAN/control
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Build .deb
+        run: |
+          # Исправляем права на всякий случай (Git может сбросить их)
+          chmod -R 755 observerlm-deb/DEBIAN
+          dpkg-deb --build observerlm-deb observerlm-${{ env.APP_VERSION }}_amd64.deb
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: observerlm-${{ env.APP_VERSION }}_amd64.deb
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

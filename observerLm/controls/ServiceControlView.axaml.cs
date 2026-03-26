@@ -4,13 +4,11 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
-using MsBox.Avalonia.ViewModels.Commands;
 
 namespace observerLm.controls
 {
@@ -90,31 +88,38 @@ namespace observerLm.controls
 
         private async void Button_OnClick(object? sender, RoutedEventArgs e)
         {
-            Button button = ((Button)sender)!;
-            switch (button.Tag.ToString())
+            try
             {
-                case "ystart":
-                {
-                    await HandleServiceAction("start", "yenisei");
-                    break;
-                }
-                case "ystop":
-                {
-                    await HandleServiceAction("stop", "yenisei");
-                    break;
-                }
-                case "rstart":
-                {
-                    await HandleServiceAction("start", "regime");
-                    break;
-                }
-                case "rstop":
-                {
-                    await HandleServiceAction("stop", "regime");
-                    break;
-                }
+                Button button = ((Button)sender)!;
+                if (button.Tag != null)
+                    switch (button.Tag.ToString())
+                    {
+                        case "ystart":
+                        {
+                            await HandleServiceAction("start", "yenisei");
+                            break;
+                        }
+                        case "ystop":
+                        {
+                            await HandleServiceAction("stop", "yenisei");
+                            break;
+                        }
+                        case "rstart":
+                        {
+                            await HandleServiceAction("start", "regime");
+                            break;
+                        }
+                        case "rstop":
+                        {
+                            await HandleServiceAction("stop", "regime");
+                            break;
+                        }
+                    }
             }
-            
+            catch (Exception ex)
+            {
+                await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+            }
         }
     }
     

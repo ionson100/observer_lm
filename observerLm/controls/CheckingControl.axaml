@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:observerLm.controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="observerLm.controls.CheckingControl">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,10,5">
+            <Label Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">GROUP:</Label>
+            <TextBox x:Name="InputTextBoxGroup" 
+                     Width="100" 
+                     VerticalAlignment="Center" 
+                     ToolTip.Tip="Введите код для проверки"/>
+           
+        </StackPanel>
+
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,5,10,15">
+            <Label Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">CODE:</Label>
+            <TextBox x:Name="InputTextBox" 
+                     Width="700" 
+                     VerticalAlignment="Center" 
+                     ToolTip.Tip="Введите код для проверки"/>
+            <Button x:Name="CheckButton" 
+                    Margin="20,0"
+                    Content="Проверить" 
+                    Click="CheckButton_OnClick"
+                    IsDefault="True"/>
+        </StackPanel>
+
+        <controls:CurlControl Grid.Row="2"  x:Name="CurrentControlCore" />
+           
+
+           
+        <TextBox Grid.Row="3" 
+                 Margin="0,5,0,0"
+                 x:Name="OutputTextBox"
+                 Padding="20"
+                 IsReadOnly="True"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 FontSize="16"
+                 FontWeight="DemiBold"
+                 ToolTip.Tip="JSON-ответ от сервера"/>
+        <ProgressBar Grid.Row="3" Name="LoadingBar"
+                     IsIndeterminate="True" 
+                     Width="50" Height="50"
+                     IsVisible="False"/>
+    </Grid>
+</UserControl>

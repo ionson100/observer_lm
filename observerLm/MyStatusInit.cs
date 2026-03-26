@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using MsBox.Avalonia;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -19,7 +20,12 @@ namespace observerLm;
             try
             {
                
-                MySettings settings  = MySettings.GetSettings();
+                MySettings? settings  = MySettings.GetSettings();
+                if (settings == null)
+                {
+                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не заданы").ShowAsync();
+                    return ;
+                }
                 using var httpClient = new HttpClient(new CurlLoggingHandler(
                     new HttpClientHandler(),
                     s => request = s
@@ -70,7 +76,12 @@ namespace observerLm;
             try
             {
                 
-                MySettings settings  = MySettings.GetSettings();
+                MySettings? settings  = MySettings.GetSettings();
+                if (settings == null)
+                {
+                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не заданы").ShowAsync();
+                    return;
+                }
                 using var httpClient = new HttpClient(new CurlLoggingHandler(
                     new HttpClientHandler(),
                     s => request = s

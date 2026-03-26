@@ -84,8 +84,7 @@ public partial class LogControl : UserControl ,IDisposable
         catch (Exception ex)
         {
             MessageBoxManager.GetMessageBoxStandard("Ошибка",
-                $"Ошибка доступа к файлу.{Environment.NewLine}{ex.Message}",
-                ButtonEnum.Ok).ShowAsync();
+                $"Ошибка доступа к файлу.{Environment.NewLine}{ex.Message}").ShowAsync();
             /* Ошибка доступа к файлу */
         }
     }
@@ -101,16 +100,17 @@ public partial class LogControl : UserControl ,IDisposable
     {
         try
         {
+            
             var lifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
             var clipboard = lifetime?.MainWindow?.Clipboard;
 
-            if (ListBox1.SelectedItems.Count > 0&&clipboard!=null)
+            if (ListBox1.SelectedItems is { Count: > 0 } && clipboard!=null)
             { 
                 var lines = ListBox1.SelectedItems.Cast<object>().Select(item => item.ToString()); 
                 string textToCopy = string.Join(Environment.NewLine, lines); 
                 await clipboard.SetTextAsync(textToCopy);
             }
-            if (ListBox2.SelectedItems.Count > 0&&clipboard!=null)
+            if (ListBox2.SelectedItems is { Count: > 0 } && clipboard!=null)
             {
              
                 var lines = ListBox2.SelectedItems.Cast<object>().Select(item => item.ToString());

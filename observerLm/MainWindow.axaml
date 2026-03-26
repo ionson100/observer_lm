@@ -12,12 +12,13 @@
             <RowDefinition Height="*"/>   
            
         </Grid.RowDefinitions>
-
+        
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5,10,5">
             <Button Tag="b1"  Width="100" Click="Button_OnClick">Init</Button>
             <Button Tag="b2" Width="100" Click="Button_OnClick">Status</Button>
             <Button Tag="bst" Width="100" Click="Button_OnClick">Stats</Button>
             <Button Tag="bconfig" Width="100" Click="Button_OnClick">Config</Button>
+            <Button Tag="bchecking" Width="100" Click="Button_OnClick">Checking</Button>
             <Button Tag="b3" Width="100" Click="Button_OnClick">Log</Button>
             <Button Tag="b4" Width="100" Click="Button_OnClick">Settings</Button>
             <Button Tag="bsale" Width="100" Click="Button_OnClick">Sale</Button>
