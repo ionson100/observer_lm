@@ -18,6 +18,7 @@
         <entry key="obserberLm/controls/StatusControl.axaml" value="obserberLm/obserberLm.csproj" />
         <entry key="obserberLm/controls/controlSale/SaleInnerControl.axaml" value="obserberLm/obserberLm.csproj" />
         <entry key="obserberLm/controls/dialogs/HelpDialog.axaml" value="obserberLm/obserberLm.csproj" />
+        <entry key="observerLm/App.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/MainWindow.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/CheckingControl.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/HelpController.axaml" value="observerLm/observerLm.csproj" />

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using observerLm.controls.controlSale;
 using observerLm.controls.dialogs;
 
@@ -75,7 +73,7 @@ public partial class SaleControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
            
         }
     }

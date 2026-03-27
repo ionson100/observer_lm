@@ -1,15 +1,14 @@
-﻿using Avalonia;
+﻿using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 
 namespace observerLm.controls.dialogs;
 
-public partial class ErrorWindow_ : Window
+public partial class ErrorWindow : Window
 {
-    public ErrorWindow_() => InitializeComponent();
+    private ErrorWindow() => InitializeComponent();
 
-    public ErrorWindow_(string message) : this()
+    public ErrorWindow(string message) : this()
     {
         ErrorText.Text = message;
     }
@@ -18,10 +17,17 @@ public partial class ErrorWindow_ : Window
 
     private async void CopyError_Click(object? sender, RoutedEventArgs e)
     {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-        if (clipboard != null)
+        try
         {
-            await clipboard.SetTextAsync(ErrorText.Text);
+            var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            if (clipboard != null)
+            {
+                await clipboard.SetTextAsync(ErrorText.Text);
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
         }
     }
 }

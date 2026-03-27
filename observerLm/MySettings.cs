@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
@@ -52,7 +51,7 @@ public class MySettings
         catch (Exception e)
         {
             var box = MessageBoxManager.GetMessageBoxStandard("Ошибка", "Получение настроек, ошибка. Файл не найден или нарушена его структура (json)." +
-                                                                           e.Message,  ButtonEnum.Ok);
+                                                                           e.Message,ButtonEnum.Ok,Icon.Error);
            box.ShowAsync();
            return null;
         }

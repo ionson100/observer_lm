@@ -1,13 +1,11 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 using observerLm.controls;
-using observerLm.controls.dialogs;
 
 namespace observerLm;
 
@@ -28,7 +26,8 @@ public partial class MainWindow : Window
         {
             case "b1":
             { 
-                var d= await MessageBoxManager.GetMessageBoxStandard("Инициализация", "Произвести инициализацию локального модуля?",ButtonEnum.OkCancel).ShowAsync();
+                var d= await MessageBoxManager.GetMessageBoxStandard("Инициализация", 
+                    "Произвести инициализацию локального модуля?",ButtonEnum.OkCancel).ShowAsync();
                 if (d == ButtonResult.Ok)
                 {
                     LoadingBar.IsVisible=true;
@@ -169,7 +168,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            MessageBoxManager.GetMessageBoxStandard("Ошибка", $"Файл справки не найден: '{path}'").ShowAsync();
+            MessageBoxManager.GetMessageBoxStandard("Ошибка", $"Файл справки не найден: '{path}'",ButtonEnum.Ok,MsBox.Avalonia.Enums.Icon.Error).ShowAsync();
             return null;
         }
     }

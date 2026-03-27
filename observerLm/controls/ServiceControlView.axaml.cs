@@ -72,14 +72,16 @@ namespace observerLm.controls
                 await UpdateStatuses();
                 await Task.Delay(3000); // Опрос раз в 3 секунды
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
-        // Стандартная реализация уведомления интерфейса об изменениях
+    
         public new event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? name = null) => 
+
+        private void OnPropertyChanged([CallerMemberName] string? name = null) => 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        protected void SetField<T>(ref T field, T value, [CallerMemberName] string? name = null)
+        private void SetField<T>(ref T field, T value, [CallerMemberName] string? name = null)
         {
             if (Equals(field, value)) return;
             field = value;
@@ -90,7 +92,7 @@ namespace observerLm.controls
         {
             try
             {
-                Button button = ((Button)sender)!;
+                Button button = ((Button)sender!);
                 if (button.Tag != null)
                     switch (button.Tag.ToString())
                     {
@@ -118,7 +120,7 @@ namespace observerLm.controls
             }
             catch (Exception ex)
             {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+                await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
             }
         }
     }

@@ -22,31 +22,31 @@
 
         <!-- Параметр 1 -->
         <Label Content="URL:"  FontWeight="Bold" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Name="TxtUrl"   Grid.Row="0" Grid.Column="1"
+        <TextBox Classes="EditText" Name="TxtUrl"   Grid.Row="0" Grid.Column="1"
                  ToolTip.Tip="Адрес обращения к локальному модулю"
                  Grid.ColumnSpan="2" Margin="5"/>
 
         <!-- Параметр 2 -->
         <Label Content="BASIC:" FontWeight="Bold" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Name="TxtBasic"  Grid.Row="1" Grid.Column="1"
+        <TextBox Classes="EditText" Name="TxtBasic"  Grid.Row="1" Grid.Column="1"
                  ToolTip.Tip="Строка login:password в Base64"
                  Grid.ColumnSpan="2" Margin="5"/>
 
         <!-- Параметр 3 -->
         <Label Content="TOKEN:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Name="TxtToken"  Grid.Row="2" Grid.Column="1"
+        <TextBox Classes="EditText" Name="TxtToken"  Grid.Row="2" Grid.Column="1"
                  ToolTip.Tip="Токен для авторизации при обращении к локальному модулю"
                  Grid.ColumnSpan="2" Margin="5"/>
 
         <Label Content="TAIL:" FontWeight="Bold" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Name="TxtTail" 
+        <TextBox Classes="EditText" Name="TxtTail" 
                  ToolTip.Tip="Количество последних строк для отображения при запуске из файла лога"
                 
                  Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5"/>
 
         <!-- Параметр 4 (с кнопкой выбора папки) -->
         <Label Content="FOLDER LOG:" FontWeight="Bold" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Name="TxtFolderPath"  Grid.Row="4"
+        <TextBox Classes="EditText" Name="TxtFolderPath"  Grid.Row="4"
                  ToolTip.Tip="Путь к папке с логами для отображения при запуске из папки логов"
                  Grid.Column="1" Margin="5"/>
         <Button Content="Сохранить" 

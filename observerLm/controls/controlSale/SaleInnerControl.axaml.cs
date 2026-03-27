@@ -1,8 +1,5 @@
-﻿using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 
@@ -35,7 +32,7 @@ public partial class SaleInnerControl : UserControl
             }
         }
 
-        Loaded += (sender, args) =>
+        Loaded += (_, _) =>
         {
             InputTextBox.Focus();
         };
@@ -64,7 +61,7 @@ public partial class SaleInnerControl : UserControl
                       break;
                   }
               }
-              await MessageBoxManager.GetMessageBoxStandard("Предупреждение",   message).ShowAsync();
+              await MessageBoxManager.GetMessageBoxStandard("Предупреждение",   message,ButtonEnum.Ok,Icon.Warning).ShowAsync();
                
               return;
 

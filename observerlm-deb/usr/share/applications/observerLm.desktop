@@ -1,6 +1,7 @@
 [Desktop Entry]
+Version=1.0.0
 Name=ObserverLm
-Exec=/usr/bin/observerLm
+Exec=/usr/local/bin/observerLm
 Icon=observerLm
 Type=Application
 Categories=Utility;

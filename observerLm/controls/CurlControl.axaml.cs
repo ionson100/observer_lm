@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
-using Avalonia;
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace observerLm.controls;
 
@@ -19,14 +19,18 @@ public partial class CurlControl : UserControl
 
     private async void Copy_Click(object? sender, RoutedEventArgs e)
     {
-        if (sender is Button button)
+        try
         {
+            if (sender is not Button _) return;
             var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
             if (clipboard != null && !string.IsNullOrEmpty(OutputTextBoxR.Text))
             {
                 await clipboard.SetTextAsync(OutputTextBoxR.Text.Trim());
             }
         }
-        
+        catch (Exception ex)
+        {
+          await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
+        }
     }
 }

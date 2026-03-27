@@ -43,6 +43,15 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
         
+        <Style Selector="TextBox.EditText">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="SelectionBrush" Value="Gray" />
+            <Setter Property="SelectionForegroundBrush" Value="White" />
+        </Style>
+        <Style Selector="TextBox.EditText:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#E7FCEA" />
+        </Style>
+        
        
         
         

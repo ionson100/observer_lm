@@ -18,7 +18,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5,10,15">
             <Label Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">CODE:</Label>
-            <TextBox x:Name="InputTextBox" 
+            <TextBox Classes="EditText" x:Name="InputTextBox" 
                      Width="700" 
                      VerticalAlignment="Center" 
                     

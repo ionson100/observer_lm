@@ -1,6 +1,6 @@
 #!/bin/bash
 
-chmod +x /usr/bin/observerLm
+chmod +x /usr/local/bin/observerLm
 export DISPLAY=:0
 update-desktop-database /usr/share/applications
 

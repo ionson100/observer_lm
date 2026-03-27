@@ -774,7 +774,7 @@
         }
       }
     },
-    "net9.0/win-x64": {
+    "net9.0/linux-x64": {
       "Avalonia/11.3.12": {
         "type": "package",
         "dependencies": {
@@ -858,10 +858,7 @@
         }
       },
       "Avalonia.Angle.Windows.Natives/2.1.25547.20250602": {
-        "type": "package",
-        "native": {
-          "runtimes/win-x64/native/av_libglesv2.dll": {}
-        }
+        "type": "package"
       },
       "Avalonia.BuildServices/11.3.2": {
         "type": "package",
@@ -1137,6 +1134,9 @@
         },
         "runtime": {
           "lib/net8.0/_._": {}
+        },
+        "native": {
+          "runtimes/linux-x64/native/libHarfBuzzSharp.so": {}
         }
       },
       "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
@@ -1168,9 +1168,6 @@
         },
         "runtime": {
           "lib/net8.0/_._": {}
-        },
-        "native": {
-          "runtimes/win-x64/native/libHarfBuzzSharp.dll": {}
         }
       },
       "MessageBox.Avalonia/3.3.1.1": {
@@ -1268,6 +1265,9 @@
         },
         "runtime": {
           "lib/net6.0/_._": {}
+        },
+        "native": {
+          "runtimes/linux-x64/native/libSkiaSharp.so": {}
         }
       },
       "SkiaSharp.NativeAssets.macOS/2.88.9": {
@@ -1299,9 +1299,6 @@
         },
         "runtime": {
           "lib/net6.0/_._": {}
-        },
-        "native": {
-          "runtimes/win-x64/native/libSkiaSharp.dll": {}
         }
       },
       "Splat/19.3.1": {
@@ -2716,19 +2713,15 @@
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "name": "Microsoft.AspNetCore.App.Runtime.linux-x64",
             "version": "[9.0.14, 9.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Crossgen2.linux-x64",
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
             "version": "[9.0.14, 9.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[9.0.14, 9.0.14]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "name": "Microsoft.NETCore.App.Runtime.linux-x64",
             "version": "[9.0.14, 9.0.14]"
           }
         ],
@@ -2741,7 +2734,7 @@
       }
     },
     "runtimes": {
-      "win-x64": {
+      "linux-x64": {
         "#import": []
       }
     }

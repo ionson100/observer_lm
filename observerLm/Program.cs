@@ -4,8 +4,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using observerLm.controls.dialogs;
-using Avalonia.FreeDesktop;
-using Avalonia.Platform;
 using Newtonsoft.Json;
 
 namespace observerLm;
@@ -102,7 +100,7 @@ class Program
 
             try
             {
-                var errorWin = new ErrorWindow_(fullMessage);
+                var errorWin = new ErrorWindow(fullMessage);
 
                 // Пытаемся найти главное окно, чтобы заблокировать его (Modal)
                 var lifetime = Avalonia.Application.Current?.ApplicationLifetime

@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -17,7 +18,7 @@ namespace observerLm.controls;
 public partial class CheckingControl : UserControl
 {
     private readonly MySettings? _settings = MySettings.GetSettings();
-    [Obsolete("Obsolete")]
+    
     public CheckingControl()
     {
         InitializeComponent();
@@ -33,7 +34,7 @@ public partial class CheckingControl : UserControl
             e.Handled = true;
         }
     }
-    [Obsolete("Obsolete")]
+  
     private async void OnPastingFromClipboard(object? sender, RoutedEventArgs e)
     {
         try
@@ -52,7 +53,7 @@ public partial class CheckingControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
            
         }
     }
@@ -64,7 +65,7 @@ public partial class CheckingControl : UserControl
             string? code = InputTextBox.Text;
             if (string.IsNullOrWhiteSpace(code))
             {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Пожалуйста, введите код для проверки.").ShowAsync();
+                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Пожалуйста, введите код для проверки.",ButtonEnum.Ok,Icon.Error).ShowAsync();
            
                 return;
             }
@@ -79,7 +80,7 @@ public partial class CheckingControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
         }
     }
     
@@ -101,7 +102,7 @@ public partial class CheckingControl : UserControl
         {
             if (_settings == null)
             {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не найдены.").ShowAsync();
+                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не найдены.",ButtonEnum.Ok,Icon.Error).ShowAsync();
                 return;
             }
 
@@ -109,13 +110,13 @@ public partial class CheckingControl : UserControl
             {
                 if(!int.TryParse(group, out int result))
                 {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара.").ShowAsync();
+                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара.",ButtonEnum.Ok,Icon.Error).ShowAsync();
                     return;
                 }
 
                 if (result <= 0)
                 {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара. {0} не допускается").ShowAsync();
+                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара. {0} не допускается",ButtonEnum.Ok,Icon.Error).ShowAsync();
                     return; 
                 }
             }

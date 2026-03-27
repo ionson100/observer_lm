@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using DynamicData;
 using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace observerLm.controls;
 
@@ -171,7 +172,7 @@ public partial class LogControl2 : UserControl,IDisposable
         }
         catch (Exception ex)
         {
-            MessageBoxManager.GetMessageBoxStandard("Ошибка копирования", ex.Message);
+            MessageBoxManager.GetMessageBoxStandard("Ошибка копирования", ex.Message,ButtonEnum.Ok,Icon.Error);
         }
     }
 }

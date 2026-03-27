@@ -6,8 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="observerLm.controls.dialogs.CodeDialog"
        
-        Title="CodeDialog"
-        Width="300" SizeToContent="Height"
+        Title="Параметры запроса"
+        Width="350" SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Padding="10">
@@ -20,14 +20,14 @@
                 Margin="0,0,0,5" 
                 FontWeight="DemiBold"/>
             <TextBox 
-              
+                Classes="EditText"
                 x:Name="TxtSkip" 
                 Padding="5"  />
 
             <TextBlock 
                 Text="Лимит (Limit: 1 - 1000):" FontSize="18" Margin="0,15,0,5" FontWeight="DemiBold"/>
             <TextBox 
-               
+                Classes="EditText"
                 x:Name="TxtLimit"  
                 Padding="5"    />
             

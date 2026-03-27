@@ -1,12 +1,7 @@
 [Desktop Entry]
-Version=1.0
-Type=Application
-Name=observerLm
-Comment=Наблюдатель за локальным модулем
-# Проверьте, что файл по этому пути имеет права на выполнение (chmod +x)
-Exec=/usr/share/observerLm/observerLm
+Version=1.0.0
+Name=ObserverLm
+Exec=/usr/local/bin/observerLm
 Icon=observerLm
-Terminal=false
-# Добавьте эти строки обязательно:
-Categories=Utility;Development;
-StartupNotify=true
+Type=Application
+Categories=Utility;

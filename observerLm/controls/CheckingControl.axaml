@@ -15,7 +15,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,10,5">
             <Label Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">GROUP:</Label>
-            <TextBox x:Name="InputTextBoxGroup" 
+            <TextBox Classes="EditText" x:Name="InputTextBoxGroup" 
                      Width="100" 
                      VerticalAlignment="Center" 
                      ToolTip.Tip="Введите код для проверки"/>
@@ -25,7 +25,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,5,10,15">
             <Label Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">CODE:</Label>
-            <TextBox x:Name="InputTextBox" 
+            <TextBox Classes="EditText" x:Name="InputTextBox" 
                      Width="700" 
                      VerticalAlignment="Center" 
                      ToolTip.Tip="Введите код для проверки"/>

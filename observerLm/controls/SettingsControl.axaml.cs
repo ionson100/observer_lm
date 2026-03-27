@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
 
 namespace observerLm.controls;
@@ -57,7 +58,7 @@ public partial class SettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message).ShowAsync();
+            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
         }
     }
     
@@ -82,14 +83,14 @@ public partial class SettingsControl : UserControl
                     "observerLm","settings.json");
                 File.WriteAllText(path,JsonConvert.SerializeObject(_settings, Formatting.Indented));
 
-                MessageBoxManager.GetMessageBoxStandard("warning", "Save Settings").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Сохранение настроек", "Успешно").ShowAsync();
 
             }
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
-            MessageBoxManager.GetMessageBoxStandard("Error", "Save Settings").ShowAsync();
+            MessageBoxManager.GetMessageBoxStandard("Сохранение настроек Ошибка", exception.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
         }
     
     }
@@ -98,27 +99,27 @@ public partial class SettingsControl : UserControl
         {
             if (string.IsNullOrWhiteSpace(TxtBasic.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Basic is empty").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Basic is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(TxtUrl.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Url is empty").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Url is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(TxtTail.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Tail is empty").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Tail is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(TxtToken.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Token is empty").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Token is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
             if (string.IsNullOrWhiteSpace(TxtFolderPath.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Folder logs is empty").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Folder logs is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
             bool isValid = Uri.TryCreate(TxtUrl.Text.Trim(), UriKind.Absolute, out Uri? uriResult)
@@ -126,19 +127,19 @@ public partial class SettingsControl : UserControl
 
             if (!isValid)
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Url string not valid").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Url string not valid",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
 
             if (!IsBase64String(TxtBasic.Text.Trim()))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Basic is not BASE64").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Basic is not BASE64",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
           
             if (!Directory.Exists(TxtFolderPath.Text.Trim()))
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "Директория логов не найдена.").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Директория логов не найдена.",ButtonEnum.Ok,Icon.Warning).ShowAsync();
                 return false;
             }
 
@@ -148,7 +149,7 @@ public partial class SettingsControl : UserControl
             }
             else
             {
-                MessageBoxManager.GetMessageBoxStandard("warning", "The tail string must not be empty and greater than 0").ShowAsync();
+                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "The tail string must not be empty and greater than 0",ButtonEnum.Ok,Icon.Warning).ShowAsync();
              
                 return false;
             }
