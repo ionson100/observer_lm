@@ -3,10 +3,13 @@ name: Build Cross-Platform Release
 on:
   push:
     tags:
-      - 'v*' # Запуск при пуше тега, например v1.0.0
+      - 'v*'
+
+# 1. ДОБАВЛЕНО: Разрешаем запись контента (нужно для создания релизов)
+permissions:
+  contents: write
 
 jobs:
-  # --- СБОРКА WINDOWS ---
   build-windows:
     runs-on: windows-latest
     steps:
@@ -19,12 +22,11 @@ jobs:
       - name: Publish EXE
         run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish-win
 
-      - name: Copy help.html to publish directory
-        run: |
-          cp ./observerLm/help.html ./publish-win/help.html
-         
+      - name: Copy help.html
+        # В Windows лучше использовать shell: pwsh (по умолчанию) и команду cp или copy
+        run: cp ./observerLm/help.html ./publish-win/help.html
 
-      - name: Upload EXE and help.html to Release
+      - name: Upload to Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -33,7 +35,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # --- СБОРКА LINUX (DEB) ---
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -49,14 +50,11 @@ jobs:
       - name: Build DEB Package
         run: |
           CLEAN_VERSION=$(echo ${GITHUB_REF_NAME} | sed 's/v//')
-          
           sed -i "s/^Version:.*$/Version: $CLEAN_VERSION/" ./observerlm-deb/DEBIAN/control
-          
           mkdir -p ./observerlm-deb/usr/local/bin/
           cp ./temp-bin/observerLm ./observerlm-deb/usr/local/bin/
           chmod +x ./observerlm-deb/usr/local/bin/observerLm
           chmod -R 755 ./observerlm-deb/DEBIAN/
-          
           dpkg-deb --build observerlm-deb "observerlm-${CLEAN_VERSION}-linux-x64.deb"
 
       - name: Upload DEB to Release
