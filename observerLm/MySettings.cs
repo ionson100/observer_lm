@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using observerLm.controls.dialogs;
 
 namespace observerLm;
 
@@ -31,7 +31,7 @@ public class MySettings
     /// </summary>
     public int Tail { get; set; } = 100;
 
-    public static MySettings? GetSettings()
+    public static async Task<MySettings?> GetSettings()
     {
         try
         {
@@ -50,9 +50,8 @@ public class MySettings
         }
         catch (Exception e)
         {
-            var box = MessageBoxManager.GetMessageBoxStandard("Ошибка", "Получение настроек, ошибка. Файл не найден или нарушена его структура (json)." +
-                                                                           e.Message,ButtonEnum.Ok,Icon.Error);
-           box.ShowAsync();
+            await MessageDialog.Show("Ошибка", e.Message);
+            
            return null;
         }
 

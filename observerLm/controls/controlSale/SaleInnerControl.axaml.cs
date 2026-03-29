@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
+using observerLm.controls.dialogs;
 
 namespace observerLm.controls.controlSale;
 
@@ -38,6 +37,8 @@ public partial class SaleInnerControl : UserControl
         };
     }
 
+   
+
     private async void CheckButton_OnClick(object? sender, RoutedEventArgs e)
     {
           if (string.IsNullOrWhiteSpace(InputTextBox.Text))
@@ -61,8 +62,12 @@ public partial class SaleInnerControl : UserControl
                       break;
                   }
               }
-              await MessageBoxManager.GetMessageBoxStandard("Предупреждение",   message,ButtonEnum.Ok,Icon.Warning).ShowAsync();
-               
+
+
+
+              await MessageDialog.Show("Ошибка", "Внимание! " + message);
+            InputTextBox.Focus();
+          
               return;
 
           }

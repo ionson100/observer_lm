@@ -1,10 +1,10 @@
 ﻿using System;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using observerLm.controls.controlSale;
 using observerLm.controls.dialogs;
+using static Avalonia.Application;
 
 namespace observerLm.controls;
 
@@ -51,21 +51,25 @@ public partial class SaleControl : UserControl
                     {
                         CodeDialog dialog = new CodeDialog();
                         var topLevel = TopLevel.GetTopLevel(this);
-                        var result = await dialog.ShowDialog<bool?>(topLevel as Window);
-                        if (result == true)
+                        if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                         {
-                            LoadingBar.IsVisible = true;
-                            try
+                            var result = await dialog.ShowDialog<bool?>(desktop.MainWindow!);
+                            if (result == true)
                             {
-                                await new MyStatusInit().RequestPiotAsync(
-                                    $"cis/sold?skip={dialog.Skip}&limit={dialog.Limit}",
-                                    (s, s1) => { ContentControlHost.Content = new StatusControl(s, s1); });
-                            }
-                            finally
-                            {
-                                LoadingBar.IsVisible = false;
+                                LoadingBar.IsVisible = true;
+                                try
+                                {
+                                    await new MyStatusInit().RequestPiotAsync(
+                                        $"cis/sold?skip={dialog.Skip}&limit={dialog.Limit}",
+                                        (s, s1) => { ContentControlHost.Content = new StatusControl(s, s1); });
+                                }
+                                finally
+                                {
+                                    LoadingBar.IsVisible = false;
+                                }
                             }
                         }
+                       
 
                         break;
                     }
@@ -73,8 +77,8 @@ public partial class SaleControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
-           
+            await MessageDialog.Show("Ошибка", ex.Message);
+
         }
     }
 }

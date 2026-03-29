@@ -8,169 +8,214 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using observerLm.controls.dialogs;
 
 namespace observerLm.controls;
 
 public partial class CheckingControl : UserControl
 {
-    private readonly MySettings? _settings = MySettings.GetSettings();
-    
+    private MySettings? _settings;
+
     public CheckingControl()
     {
         InitializeComponent();
         
         Loaded += (_, _) => InputTextBox.Focus();
+        
+        // Фильтрация ввода: только цифры
         InputTextBoxGroup.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
         InputTextBoxGroup.PastingFromClipboard += OnPastingFromClipboard;
     }
+
     private void OnTextInput(object? sender, TextInputEventArgs e)
     {
         if (!string.IsNullOrEmpty(e.Text) && !char.IsDigit(e.Text[0]))
         {
-            e.Handled = true;
+            e.Handled = true; // Блокируем нецифровой ввод
         }
     }
-  
+
     private async void OnPastingFromClipboard(object? sender, RoutedEventArgs e)
     {
         try
         {
             var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
             if (clipboard == null) return;
+
             e.Handled = true;
-           
+#pragma warning disable CS0618 // Type or member is obsolete
             var text = await clipboard.GetTextAsync();
-            if (text != null)
-            { 
-                var filteredText = new string(text.Where(char.IsDigit).ToArray()); 
-                ((TextBox)sender!).Text += filteredText;
-            }
-         
+#pragma warning restore CS0618 // Type or member is obsolete
+            if (string.IsNullOrEmpty(text)) return;
+
+            var filteredText = new string(text.Where(char.IsDigit).ToArray());
+            var textBox = (TextBox)sender!;
+            textBox.Text += filteredText;
+            textBox.CaretIndex = textBox.Text.Length; // Курсор в конец
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
-           
+            await MessageDialog.Show("Ошибка", ex.Message);
         }
     }
 
     private async void CheckButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        try
+        if (_settings == null)
         {
-            string? code = InputTextBox.Text;
-            if (string.IsNullOrWhiteSpace(code))
+            await MessageDialog.Show("Ошибка", "Настройки приложения не загружены.");
+            return;
+        }
+
+        string? code = InputTextBox.Text?.Trim();
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            await MessageDialog.Show("Ошибка", "Пожалуйста, введите код для проверки.");
+            InputTextBox.Focus();
+            return;
+        }
+
+        string? groupText = InputTextBoxGroup?.Text?.Trim();
+
+        if (!string.IsNullOrWhiteSpace(groupText))
+        {
+            if (!int.TryParse(groupText, out int groupValue) || groupValue <= 0)
             {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Пожалуйста, введите код для проверки.",ButtonEnum.Ok,Icon.Error).ShowAsync();
-           
+                await MessageDialog.Show("Ошибка", "Введите корректную группу товара (целое число > 0).");
+                InputTextBoxGroup?.Focus();
                 return;
             }
 
-            string? group = InputTextBoxGroup?.Text; 
+            LoadingBar.IsVisible = true;
+            await RequestCodeCheckAsync(
+                code,
+                groupValue,
+                (response, curl) =>
+                {
+                    OutputTextBox.Text = response;
+                    CurrentControlCore.SetCurlText(curl);
+                });
+        }
+        else
+        {
+            LoadingBar.IsVisible = true;
+            await RequestCodeCheckAsync(
+                code,
+                null,
+                (response, curl) =>
+                {
+                    OutputTextBox.Text = response;
+                    CurrentControlCore.SetCurlText(curl);
+                });
+        }
+    }
 
-            await RequestCodeCheckAsync(code,group, (s,sr) =>
+    //0104670540176099215'W9Um
+    protected override async void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        await LoadSettingsAsync();
+    }
+
+    private async Task LoadSettingsAsync()
+    {
+        try
+        {
+            _settings = await MySettings.GetSettings();
+            if (_settings == null)
             {
-                OutputTextBox.Text = s;
-                CurrentControlCore.SetCurlText(sr);
-            });
+                await MessageDialog.Show("Ошибка", "Не удалось загрузить настройки приложения.");
+            }
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
+            await MessageDialog.Show("Ошибка", $"Критическая ошибка при загрузке настроек: {ex.Message}");
         }
     }
-    
-     private class LmListCode
+
+    private async Task RequestCodeCheckAsync(string code, int? group, Action<string, string>? action)
+    {
+        if (_settings == null)
         {
-            [JsonProperty("cis_list")] public List<LmItemCode> CisList { get; set; } = new();
+            action?.Invoke("Ошибка: настройки не загружены.", "");
+            return;
         }
 
-        private class LmItemCode
+        string requestLog = "";
+        string? url = null;
+        string? json = null;
+
+        try
         {
-            [JsonProperty("cis")] 
-            public String Cis { get; set; } = null!;
-            [JsonProperty("pg",NullValueHandling = NullValueHandling.Ignore)]
-            public int? Pg { get; set; }
-        }
-        //0104670540176099215'W9Um
+            using var handler = new CurlLoggingHandler(new HttpClientHandler(), s => requestLog = s);
+            using var httpClient = new HttpClient(handler);
+            httpClient.Timeout = TimeSpan.FromMilliseconds(3000);
 
-        public async Task RequestCodeCheckAsync(string code,string? group, Action<string,string> action)
-        {
-            if (_settings == null)
-            {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не найдены.",ButtonEnum.Ok,Icon.Error).ShowAsync();
-                return;
-            }
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {_settings.Auth}");
 
-            if (!string.IsNullOrWhiteSpace(group))
+            url = $"{_settings.Url.TrimEnd('/')}/cis/outCheck";
+            var payload = new LmListCode
             {
-                if(!int.TryParse(group, out int result))
+                CisList = new List<LmItemCode>
                 {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара.",ButtonEnum.Ok,Icon.Error).ShowAsync();
-                    return;
+                    new() { Cis = code, Pg = group }
                 }
+            };
+            json = JsonConvert.SerializeObject(payload, Formatting.None);
+            var content = new StringContent(json, Encoding.UTF8, App.ApplicationJson);
 
-                if (result <= 0)
-                {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Введите правильно группу товара. {0} не допускается",ButtonEnum.Ok,Icon.Error).ShowAsync();
-                    return; 
-                }
-            }
-            string request = "";
-            LmListCode lmListCode = new LmListCode();
-            lmListCode.CisList.Add(new LmItemCode { Cis = code,Pg = string.IsNullOrWhiteSpace(group)?null:int.Parse(group)});
-            string? url = null;
-            string? json = null;
-            LoadingBar.IsVisible = true;
-            try
+            using var response = await httpClient.PostAsync(url, content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var statusCode = (int)response.StatusCode;
+
+            if (statusCode == 200)
             {
-                
-                using var httpClient = new HttpClient(new CurlLoggingHandler(
-                    new HttpClientHandler(),
-                    s => request=s
-                ));
-                httpClient.Timeout = TimeSpan.FromMilliseconds(3000);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {_settings.Auth}");
-                // Отправка POST-запроса
-                url = _settings.Url + "cis/outCheck";
-                json = JsonConvert.SerializeObject(lmListCode);
-                using var response = await httpClient.PostAsync(url,
-                    new StringContent(json, Encoding.UTF8, App.ApplicationJson));
-
-                int status = (int)response.StatusCode;
-                string responseBody = await response.Content.ReadAsStringAsync();
-                if (status == 200)
-                {
-                    string prettyJson = JToken.Parse(responseBody).ToString(Formatting.Indented);
-                    action.Invoke(prettyJson,request);
-                }
-                else
-                {
-                    string error = "Ошибка при запросе к API. Код статуса: " + status + Environment.NewLine +
-                                   responseBody + Environment.NewLine +
-                                   "Url: " + url + Environment.NewLine + json;
-                    action.Invoke(error,request);
-                }
-
-
-
+                var prettyJson = JToken.Parse(responseBody).ToString(Formatting.Indented);
+                action?.Invoke(prettyJson, requestLog);
             }
-            catch (Exception ex)
+            else
             {
-                string error = "Ошибка при запросе к API. Exception: " + Environment.NewLine + ex.Message +
-                               Environment.NewLine + url +
-                               Environment.NewLine + json;
-                action.Invoke(error,request);
-            }
-            finally
-            {
-                LoadingBar.IsVisible = false;
-
+                var error = $"Ошибка при запросе к API.{Environment.NewLine}" +
+                            $"Код статуса: {statusCode}{Environment.NewLine}" +
+                            $"{responseBody}{Environment.NewLine}" +
+                            $"Url: {url}{Environment.NewLine}" +
+                            $"JSON: {json}";
+                action?.Invoke(error, requestLog);
             }
         }
+        catch (Exception ex)
+        {
+            var error = $"Ошибка подключения к API.{Environment.NewLine}" +
+                        $"{ex.Message}{Environment.NewLine}" +
+                        (!string.IsNullOrEmpty(url) ? $"Url: {url}{Environment.NewLine}" : "") +
+                        (!string.IsNullOrEmpty(json) ? $"JSON: {json}{Environment.NewLine}" : "");
+            action?.Invoke(error, requestLog);
+        }
+        finally
+        {
+            LoadingBar.IsVisible = false;
+        }
+    }
+
+    #region Внутренние классы
+
+    private class LmListCode
+    {
+        [JsonProperty("cis_list")]
+        public List<LmItemCode> CisList { get; set; } = new();
+    }
+
+    private class LmItemCode
+    {
+        [JsonProperty("cis")]
+        public string Cis { get; set; } = null!;
+
+        [JsonProperty("pg", NullValueHandling = NullValueHandling.Ignore)]
+        public int? Pg { get; set; }
+    }
+
+    #endregion
 }

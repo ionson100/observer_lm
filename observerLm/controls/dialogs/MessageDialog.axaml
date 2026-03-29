@@ -1,0 +1,106 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialogs="clr-namespace:observerLm.controls.dialogs"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="observerLm.controls.dialogs.MessageDialog"
+        Width="400"
+        CanMinimize="False"
+        
+        SystemDecorations="None"          
+        ExtendClientAreaToDecorationsHint="True"  
+        ExtendClientAreaTitleBarHeightHint="-1"
+        MaxHeight="400"
+        
+       Background="Transparent"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        x:DataType="dialogs:MessageDialog">
+        
+        <Border Background="White"
+                Margin="5"
+                BorderBrush="#787878"
+                BorderThickness="1"
+                BoxShadow="12 12 14 -7 rgba(22, 26, 30, 0.51)">
+      
+            <Panel>
+               <Grid RowDefinitions="Auto,Auto,Auto" Margin="20">
+        
+       
+            
+          
+        <!-- Заголовок с иконкой -->
+        <Grid ColumnDefinitions="Auto,*" Grid.Row="0" Margin="0,0,0,10" KeyboardNavigation.TabNavigation="None">
+            <!-- Иконка -->
+           
+                
+                    
+            <PathIcon IsTabStop="False"  Name="PathCore" Grid.Column="0"  Width="30" Height="30"  />
+              
+          
+            <!-- Текст заголовка -->
+            <TextBlock Grid.Column="1" 
+                       IsTabStop="False"
+                       Name="TextBlockTitle"
+                       FontSize="16"
+                       FontWeight="DemiBold"
+                       Width="300"
+                       VerticalAlignment="Center"
+                       Margin="12,0,0,0"/>
+            
+        </Grid>
+        
+      
+        <TextBox Grid.Row="1" 
+                 AcceptsReturn="True" 
+                 MaxHeight="500"
+                 VerticalAlignment="Center"
+                
+                 Classes="clean"
+                   HorizontalAlignment="Center"
+                   Name="TextBlockMessage"
+                   TextWrapping="Wrap"
+                  />
+        
+        <!-- Кнопки закрытия -->
+        <StackPanel  Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,10">
+            <Button Name="ButtonClose1" Content="Да"
+                    Width="100"
+                    CommandParameter="bt1"
+                    Height="32"
+                    Click="Button_OnClick"
+                    IsVisible="False"
+                    Classes="primary"/>
+            <Button Name="ButtonClose" Content="Закрыть"
+                    Width="100"
+                    IsDefault="True"
+                    CommandParameter="bt2"
+                    Height="32"
+                    Click="Button_OnClick"
+                    Classes="primary"/>
+        </StackPanel>
+        
+        
+    </Grid>
+                    <Button Width="32" Height="32" 
+                            Click="Button_OnClick2"
+                            Padding="2"
+                            Margin="4"
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Top"
+                            Background="Transparent">
+                            <!-- Рисуем крестик с помощью геометрии -->
+                            <Path Data="M 7,7 L 25,25 M 7,25 L 25,7" 
+                                  Stroke="Black" 
+                                  StrokeThickness="2" 
+                                  Stretch="Uniform" 
+                                  Margin="6"/>
+                    </Button>
+            </Panel>
+    </Border>
+        
+</Window>

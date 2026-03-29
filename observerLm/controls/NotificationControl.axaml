@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:observerLm.controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Background="Transparent"
+             x:Class="observerLm.controls.NotificationControl"
+             x:DataType="controls:NotificationControl">
+    
+
+  
+    <Border Name="MainBorder" 
+            Margin="5"
+            Background="#0A7234" 
+            CornerRadius="8" 
+            Padding="15" 
+            BoxShadow="0 4 10 0 #40000000">
+        <Grid ColumnDefinitions="*, Auto">
+             
+            <TextBlock 
+                Name="TextBlockMessage" 
+                FontSize="20" 
+                Text="{Binding Message}" 
+                Foreground="White" 
+                VerticalAlignment="Center" 
+                Margin="20,0,0,0"/>
+            <Button Grid.Column="1" Width="32" Height="32" 
+                    Click="Close_Click"
+                    Padding="2"
+                    Margin="20,0,0,0"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Background="Transparent">
+                <Path Data="M 7,7 L 25,25 M 7,25 L 25,7" 
+                      Stroke="Red" 
+                      StrokeThickness="2" 
+                      Stretch="Uniform" 
+                      Margin="6"/>
+            </Button>
+            
+        </Grid>
+    </Border>
+</UserControl>

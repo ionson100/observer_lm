@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
+using observerLm.controls.dialogs;
+
 
 namespace observerLm.controls
 {
+    /// <summary>
+    /// Логика взаимодействия с ControlPanel.xaml
+    /// </summary>
     public partial class ServiceControlView : UserControl, INotifyPropertyChanged
     {
           private string _regimeStatus = "Проверка...";
@@ -43,14 +46,13 @@ namespace observerLm.controls
             var result = await ServiceManager.SendCommandAsync(action, serviceName);
             if (!result.Success)
             {
-                var box = MessageBoxManager.GetMessageBoxStandard(
-                    "Ошибка", 
-                    $"Действие '{action}' для '{serviceName}' не удалось:\n{result.Error}",
-                    ButtonEnum.Ok, Icon.Error);
-                await box.ShowAsync();
+                await MessageDialog.Show("Ошибка",
+                    $"Действие: '{action}' для '{serviceName}' не удалось:\n{result.Error} Возможно не хватает прав.");
+
             }
             await UpdateStatuses();
         }
+       
 
         private async Task UpdateStatuses()
         {
@@ -120,18 +122,26 @@ namespace observerLm.controls
             }
             catch (Exception ex)
             {
-                await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
+                await MessageDialog.Show("Ошибка", ex.Message);
             }
         }
     }
     
 }
 
+/// <summary>
+/// Класс управления службами
+/// </summary>
 
 public static class ServiceManager
 {
     private static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
+    /// <summary>
+    /// Получить статус службы
+    /// </summary>
+    /// <param name="serviceName"></param>
+    /// <returns></returns>
     public static async Task<(string Status, bool IsRunning)> GetStatusAsync(string serviceName)
     {
         string cmd = IsWindows ? "sc" : "systemctl";
@@ -153,6 +163,12 @@ public static class ServiceManager
         }
     }
 
+    /// <summary>
+    /// Отправляет комманду сервиса.
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="serviceName"></param>
+    /// <returns></returns>
     public static async Task<(bool Success, string Error)> SendCommandAsync(string action, string serviceName)
     {
         // Для Windows используем 'net', для Linux 'systemctl'
@@ -162,6 +178,12 @@ public static class ServiceManager
         return await RunProcessWithResultAsync(cmd, args);
     }
 
+    /// <summary>
+    /// Выполнение команды с выводом результатов на консоль
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
     private static async Task<string> RunProcessAsync(string fileName, string args)
     {
         try
@@ -178,6 +200,12 @@ public static class ServiceManager
         catch { return ""; }
     }
 
+    /// <summary>
+    /// Выполняет команду и возвращает результат
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
     private static async Task<(bool Success, string Error)> RunProcessWithResultAsync(string fileName, string args)
     {
         try

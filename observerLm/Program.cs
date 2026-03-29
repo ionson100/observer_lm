@@ -103,7 +103,7 @@ class Program
                 var errorWin = new ErrorWindow(fullMessage);
 
                 // Пытаемся найти главное окно, чтобы заблокировать его (Modal)
-                var lifetime = Avalonia.Application.Current?.ApplicationLifetime
+                var lifetime = Application.Current?.ApplicationLifetime
                     as Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime;
 
                 if (lifetime?.MainWindow != null)

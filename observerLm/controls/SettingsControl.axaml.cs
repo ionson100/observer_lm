@@ -1,33 +1,49 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
+using observerLm.controls.dialogs;
 
 namespace observerLm.controls;
 
 public partial class SettingsControl : UserControl
 {
     private MySettings? _settings;
-    [Obsolete("Obsolete")]
+
     public SettingsControl()
     {
         InitializeComponent();
-        _settings = MySettings.GetSettings();
-        if(_settings==null)
-            return;
-        TxtUrl.Text=_settings.Url;
-        TxtBasic.Text = _settings.Auth;
-        TxtFolderPath.Text = _settings.FolderLog;
-        TxtToken.Text=_settings.Token;
-        TxtTail.Text = _settings.Tail.ToString();
-        
-        TxtTail.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
-        TxtTail.PastingFromClipboard += OnPastingFromClipboard;
+        LoadSettingsAsync();
+    }
+  
+    private async void LoadSettingsAsync()
+    {
+        try
+        {
+            _settings = await MySettings.GetSettings();
+            if (_settings == null) return;
+
+            // Привязка данных через свойства (или можно использовать MVVM)
+            TxtUrl.Text = _settings.Url;
+            TxtBasic.Text = _settings.Auth;
+            TxtFolderPath.Text = _settings.FolderLog;
+            TxtToken.Text = _settings.Token;
+            TxtTail.Text = _settings.Tail.ToString();
+
+            // Ограничение ввода: только цифры
+            TxtTail.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
+#pragma warning disable CS0618 // Type or member is obsolete
+            TxtTail.PastingFromClipboard += OnPastingFromClipboard;
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+        catch (Exception ex)
+        {
+            await MessageDialog.Show("Ошибка", $"Не удалось загрузить настройки:\n{ex.Message}");
+        }
     }
     
     private void OnTextInput(object? sender, TextInputEventArgs e)
@@ -58,19 +74,19 @@ public partial class SettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            await MessageBoxManager.GetMessageBoxStandard("Ошибка", ex.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
+            await MessageDialog.Show("Ошибка", ex.Message);
         }
     }
     
   
    
 
-    private void ButtonBase_OnClick(object? sender, RoutedEventArgs e)
+    private async void ButtonBase_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {
             if(_settings==null) return;
-            bool res= Validate();
+            bool res= await Validate();
             if (res)
             {
                 _settings.FolderLog= TxtFolderPath.Text!.Trim();
@@ -81,81 +97,75 @@ public partial class SettingsControl : UserControl
                 string path = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
                     "observerLm","settings.json");
-                File.WriteAllText(path,JsonConvert.SerializeObject(_settings, Formatting.Indented));
+                await File.WriteAllTextAsync(path,JsonConvert.SerializeObject(_settings, Formatting.Indented));
 
-                MessageBoxManager.GetMessageBoxStandard("Сохранение настроек", "Успешно").ShowAsync();
+                MainWindow.Instance!.MyNotification.Show("Настройки успешно сохранены.");
+               
+               
 
             }
         }
         catch (Exception exception)
         {
+            await MessageDialog.Show("Сохранение настроек Ошибка", exception.Message);
             Console.WriteLine(exception);
-            MessageBoxManager.GetMessageBoxStandard("Сохранение настроек Ошибка", exception.Message,ButtonEnum.Ok,Icon.Error).ShowAsync();
         }
     
     }
-    
-     bool Validate()
+
+    private async Task<bool> Validate()
+    {
+        (TextBox field, string message)[] validations = new[]
         {
-            if (string.IsNullOrWhiteSpace(TxtBasic.Text))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Basic is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(TxtUrl.Text))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Url is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(TxtTail.Text))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Tail is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(TxtToken.Text))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Token is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(TxtFolderPath.Text))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Folder logs is empty",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-            bool isValid = Uri.TryCreate(TxtUrl.Text.Trim(), UriKind.Absolute, out Uri? uriResult)
-                           && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            (TxtBasic, "Элемент Basic пуст."),
+            (TxtUrl, "Элемент URL пуст."),
+            (TxtTail, "Элемент TAIL пуст."),
+            (TxtToken, "Элемент Token пуст."),
+            (TxtFolderPath, "Элемент FOLDER пуст.")
+        };
 
-            if (!isValid)
+        foreach (var (field, msg) in validations)
+        {
+            if (string.IsNullOrWhiteSpace(field.Text))
             {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Url string not valid",ButtonEnum.Ok,Icon.Warning).ShowAsync();
+                await ShowWarning(msg, field);
                 return false;
             }
-
-            if (!IsBase64String(TxtBasic.Text.Trim()))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Basic is not BASE64",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-          
-            if (!Directory.Exists(TxtFolderPath.Text.Trim()))
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "Директория логов не найдена.",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-                return false;
-            }
-
-            if (int.TryParse(TxtTail.Text.Trim(), out int result) && result > 0)
-            {
-                
-            }
-            else
-            {
-                MessageBoxManager.GetMessageBoxStandard("Предупреждение", "The tail string must not be empty and greater than 0",ButtonEnum.Ok,Icon.Warning).ShowAsync();
-             
-                return false;
-            }
-
-            return true;
         }
+
+        if (!Uri.TryCreate(TxtUrl.Text!.Trim(), UriKind.Absolute, out var uriResult) ||
+            (uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps))
+        {
+            await ShowWarning("URL строка некорректна.", TxtUrl);
+            return false;
+        }
+
+        if (!IsBase64String(TxtBasic.Text!.Trim()))
+        {
+            await ShowWarning("Basic должен быть в формате Base64.", TxtBasic);
+            return false;
+        }
+
+        if (!Directory.Exists(TxtFolderPath.Text!.Trim()))
+        {
+            await ShowWarning("Данная папка отсутствует в системе.", TxtFolderPath);
+            return false;
+        }
+
+        if (!int.TryParse(TxtTail.Text!.Trim(), out int tailValue) || tailValue <= 0)
+        {
+            await ShowWarning("Tail должно содержать целое число больше нуля.", TxtTail);
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task ShowWarning(string message, TextBox field)
+    {
+        await MessageDialog.Show("Внимание", message, DialogType.Warning);
+        field.Focus();
+    }
 
         private bool IsBase64String(string base64)
         {

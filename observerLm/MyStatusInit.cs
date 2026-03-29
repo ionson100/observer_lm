@@ -4,173 +4,158 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using observerLm.controls.dialogs;
 
 namespace observerLm;
 
+public class MyStatusInit
+{
+    private const int TimeoutMs = 3000;
 
-     class MyStatusInit
+    /// <summary>
+    /// Выполняет GET-запрос к LM с авторизацией.
+    /// </summary>
+    public async Task RequestPiotAsync(string append, Action<string?, string?> action)
     {
-        public async Task RequestPiotAsync(string append,Action<string,string> action)
+        await ExecuteRequestAsync(
+            (client, url, _) => client.GetAsync(url),
+            append,
+            null,
+            HandleSuccessResponse,
+            (status, body, url, _) => $"Ошибка при запросе к LM. Статус ответа: {status}{Environment.NewLine}{body}{Environment.NewLine}Url: {url}",
+            action);
+    }
+
+    /// <summary>
+    /// Выполняет POST /init запрос для инициализации.
+    /// </summary>
+    public async Task RequestInitAsync(Action<string?, string?>? action)
+    {
+        var tempInit = new TempInit { Token = (await GetSettingsOrWarn())?.Token };
+        if (tempInit.Token == null) return;
+
+        await ExecuteRequestAsync(
+            (client, url, content) => client.PostAsync(url, content),
+            "init",
+            () => JsonConvert.SerializeObject(tempInit),
+            _ => $"Инициализация успешно. Http status:200{Environment.NewLine}Смотри вкладку Status, наблюдай за логами.",
+            (status, body, url, json) => $"Ошибка при запросе к LM. Статус ответа: {status}{Environment.NewLine}{body}{Environment.NewLine}Url: {url}{Environment.NewLine}JSON: {json}",
+            action);
+    }
+
+    /// <summary>
+    /// Выполняет POST-запрос для операции продажи.
+    /// </summary>
+    public async Task RequestSellAsync(string appendUrl, string code, Action<string, string> action)
+    {
+        var tempSell = new TempSell { CisList = new List<string> { code } };
+        await ExecuteRequestAsync(
+            (client, url, content) => client.PostAsync(url, content),
+            appendUrl,
+            () => JsonConvert.SerializeObject(tempSell),
+            body => JToken.Parse(body).ToString(Formatting.Indented),
+            (status, body, url, json) => $"Ошибка при запросе к LM. Статус ответа: {status}{Environment.NewLine}{body}{Environment.NewLine}Url: {url}{Environment.NewLine}JSON: {json}",
+            (result, request) =>
+            {
+                if (request != null) action(result!, request);
+            });
+    }
+
+    #region Вспомогательные методы
+
+    /// <summary>
+    /// Универсальный метод выполнения HTTP-запросов.
+    /// </summary>
+    private async Task ExecuteRequestAsync(
+        Func<HttpClient, string, HttpContent?, Task<HttpResponseMessage>> requestFactory,
+        string endpoint,
+        Func<string>? getJson,
+        Func<string, string> onSuccess,
+        Func<int, string, string, string?, string> onError,
+        Action<string?, string?>? callback)
+    {
+        string requestLog = "";
+        string? url = null;
+        string? json = null;
+
+        try
         {
-            string request = "";
-
-            try
+            var settings = await GetSettingsOrWarn();
+            if (settings == null)
             {
-               
-                MySettings? settings  = MySettings.GetSettings();
-                if (settings == null)
-                {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не заданы",ButtonEnum.Ok,Icon.Error).ShowAsync();
-                    return ;
-                }
-                using var httpClient = new HttpClient(new CurlLoggingHandler(
-                    new HttpClientHandler(),
-                    s => request = s
-                ));
-                httpClient.Timeout = TimeSpan.FromMilliseconds(3000);
-              
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {settings.Auth}");
-                // Отправка POST-запроса
-                string url = settings.Url + append;
-                using var response = await httpClient.GetAsync(url);
-
-                int status = (int)response.StatusCode;
-                string responseBody = await response.Content.ReadAsStringAsync();
-                if (status == 200)
-                {
-                    string prettyJson = JToken.Parse(responseBody).ToString(Formatting.Indented);
-                    action.Invoke(prettyJson, request);
-                }
-                else
-                {
-                    string error="Ошибка при запросе к API. Код статуса: " + status+Environment.NewLine+ responseBody+Environment.NewLine+
-                                 "Url: "+url;
-                    action.Invoke(error, request);
-                }
-                    
-
-                
-            }
-            catch (Exception ex)
-            {
-                string error = "Ошибка при запросе к API. Exception: " + Environment.NewLine + ex.Message;
-                action.Invoke(error, request);
+                callback?.Invoke(null, null);
+                return;
             }
 
+            using var handler = new CurlLoggingHandler(new HttpClientHandler(), s => requestLog = s);
+            using var httpClient = new HttpClient(handler);
+            httpClient.Timeout = TimeSpan.FromMilliseconds(TimeoutMs);
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {settings.Auth}");
+
+            url = $"{settings.Url.TrimEnd('/')}/{endpoint}";
+            HttpContent? content = getJson != null ? new StringContent(getJson(), Encoding.UTF8, App.ApplicationJson) : null;
+
+            var response = await requestFactory(httpClient, url, content);
+            json = content?.ReadAsStringAsync().Result; // Логируем отправленный JSON
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var statusCode = (int)response.StatusCode;
+
+            string result = statusCode == 200
+                ? onSuccess(responseBody)
+                : onError(statusCode, responseBody, url, json);
+
+            callback?.Invoke(result, requestLog);
         }
-
-        class TempInit
+        catch (Exception ex)
         {
-            [JsonProperty("token")] 
-            public string Token { get; set; } = null!;
+            string error = $"Ошибка при запросе к LM. Exception:{Environment.NewLine}{ex.Message}";
+            if (!string.IsNullOrEmpty(url)) error += $"{Environment.NewLine}Url: {url}";
+            if (!string.IsNullOrEmpty(json)) error += $"{Environment.NewLine}JSON: {json}";
+
+            callback?.Invoke(error, requestLog);
         }
-        public async Task RequestInitAsync( Action<string,string> action)
+    }
+
+    /// <summary>
+    /// Загружает настройки или показывает ошибку.
+    /// </summary>
+    private async Task<MySettings?> GetSettingsOrWarn()
+    {
+        var settings = await MySettings.GetSettings();
+        if (settings == null)
         {
-            string request = "";
-            string? url=null;
-            string? json=null;
-            try
-            {
-                
-                MySettings? settings  = MySettings.GetSettings();
-                if (settings == null)
-                {
-                    await MessageBoxManager.GetMessageBoxStandard("Ошибка", "Настройки приложения не заданы",ButtonEnum.Ok,Icon.Error).ShowAsync();
-                    return;
-                }
-                using var httpClient = new HttpClient(new CurlLoggingHandler(
-                    new HttpClientHandler(),
-                    s => request = s
-                ));
-                httpClient.Timeout = TimeSpan.FromMilliseconds(3000);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {settings.Auth}");
-                // Отправка POST-запроса
-                url = settings.Url + "init"; 
-                json=JsonConvert.SerializeObject(new TempInit() { Token = settings.Token });
-                using var response = await httpClient.PostAsync(url,
-                    new StringContent(json, Encoding.UTF8, App.ApplicationJson));
-                int status = (int)response.StatusCode;
-                string responseBody = await response.Content.ReadAsStringAsync();
-                if (status == 200)
-                {
-                    string prettyJson = $"Инициализация успешно.Http status:200{Environment.NewLine}Смотри вкладку Status, наблюдай за логами.";
-                    action.Invoke(prettyJson, request);
-                }
-                else
-                {
-                    string error = "Ошибка при запросе к API. Код статуса: " + status + Environment.NewLine + responseBody + Environment.NewLine +
-                                   "Url: " + url+Environment.NewLine+json;
-                    action.Invoke(error, request);
-                }
-
-
-
-            }
-            catch (Exception ex)
-            {
-                string error = "Ошибка при запросе к API. Exception: " + Environment.NewLine + ex.Message+Environment.NewLine+url+
-                               Environment.NewLine+json;
-                action.Invoke(error, request);
-            }
-
+            await MessageDialog.Show("Ошибка", "Настройки приложения не заданы");
         }
+        return settings;
+    }
 
-       
-        class TempSell
-        {
-            [JsonProperty("cis_list")] public List<string>? CisList { get; set; }
-        }
+    /// <summary>
+    /// Обработка успешного JSON-ответа — форматирование.
+    /// </summary>
+    private static string HandleSuccessResponse(string body)
+    {
+        return JToken.Parse(body).ToString(Formatting.Indented);
+    }
 
-        public async Task RequestSellAsync(string appendUrl,string code,Action<string, string> action)
-        { 
-            MySettings? settings = MySettings.GetSettings();
-            if(settings==null)return;
-            string request = "";
-            string? url = null;
-            string? json = null;
-            TempSell tempSell = new TempSell { CisList = new List<string>() { code } };
-            try
-            {
+    #endregion
 
-               
-                using var httpClient = new HttpClient(new CurlLoggingHandler(
-                    new HttpClientHandler(),
-                    s => request = s
-                ));
-                httpClient.Timeout = TimeSpan.FromMilliseconds(3000);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(App.ApplicationJson));
-                httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {settings.Auth}");
-                // Отправка POST-запроса
-                url = settings.Url + appendUrl;
-                json = JsonConvert.SerializeObject(tempSell);
-                using var response = await httpClient.PostAsync(url,
-                    new StringContent(json, Encoding.UTF8, App.ApplicationJson));
-                int status = (int)response.StatusCode;
-                string responseBody = await response.Content.ReadAsStringAsync();
-                if (status == 200)
-                {
-                    string prettyJson = JToken.Parse(responseBody).ToString(Formatting.Indented);
-                    action.Invoke(prettyJson, request);
-                   
-                }
-                else
-                {
-                    string error = "Ошибка при запросе к API. Код статуса: " + status + Environment.NewLine + responseBody + Environment.NewLine +
-                                   "Url: " + url + Environment.NewLine + json;
-                    action.Invoke(error, request);
-                }
-            }
-            catch (Exception ex)
-            {
-                string error = "Ошибка при запросе к API. Exception: " + Environment.NewLine + ex.Message + Environment.NewLine + url +
-                               Environment.NewLine + json;
-                action.Invoke(error, request);
-            }
-        }
+    #region Внутренние классы
+
+    class TempInit
+    {
+        [JsonProperty("token")]
+        public string? Token { get; set; }
+    }
+
+    class TempSell
+    {
+        [JsonProperty("cis_list")]
+        public List<string>? CisList { get; set; }
+    }
+
+    #endregion
 }

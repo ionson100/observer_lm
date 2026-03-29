@@ -7,10 +7,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using DynamicData;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
+using observerLm.controls.dialogs;
+
 
 namespace observerLm.controls;
 
@@ -36,9 +37,14 @@ public partial class LogControl2 : UserControl,IDisposable
  
     private readonly CancellationTokenSource _cts1=new CancellationTokenSource();
     private readonly CancellationTokenSource _cts2=new CancellationTokenSource();
-    private readonly MySettings? _mySettings = MySettings.GetSettings();
-    
-   
+    private readonly MySettings? _mySettings =  MySettings.GetSettings().Result;
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+       Dispose();
+        base.OnDetachedFromLogicalTree(e);
+    }
+
     public LogControl2()
     {
         InitializeComponent();
@@ -172,7 +178,8 @@ public partial class LogControl2 : UserControl,IDisposable
         }
         catch (Exception ex)
         {
-            MessageBoxManager.GetMessageBoxStandard("Ошибка копирования", ex.Message,ButtonEnum.Ok,Icon.Error);
+            await MessageDialog.Show("Ошибка", ex.Message);
+
         }
     }
 }

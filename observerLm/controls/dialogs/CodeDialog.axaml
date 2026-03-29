@@ -8,6 +8,8 @@
        
         Title="Параметры запроса"
         Width="350" SizeToContent="Height"
+        CanMinimize="False"
+   
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         Padding="10">
@@ -33,7 +35,7 @@
             
            
 
-            <Button  Content="Получить" Click="GetCodes_Click" Margin="0,25,0,0" Width="150"
+            <Button  Content="Получить" Click="GetCodes_Click" Margin="0,25,0,0" Width="150" Classes="primary"
                      HorizontalAlignment="Center" 
                     Height="35"  IsDefault="True"/>
         </StackPanel>

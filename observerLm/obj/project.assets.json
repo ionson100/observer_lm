@@ -114,12 +114,12 @@
           "Avalonia.Remote.Protocol": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Controls.ColorPicker.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Controls.ColorPicker.dll": {
             "related": ".xml"
           }
         }
@@ -152,12 +152,12 @@
           "Avalonia.Themes.Simple": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Diagnostics.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Diagnostics.dll": {
             "related": ".xml"
           }
         }
@@ -274,12 +274,12 @@
           "Avalonia": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Themes.Simple.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Themes.Simple.dll": {
             "related": ".xml"
           }
         }
@@ -321,22 +321,6 @@
         },
         "runtime": {
           "lib/net8.0/Avalonia.X11.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "DialogHost.Avalonia/0.8.1": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/DialogHost.Avalonia.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/DialogHost.Avalonia.dll": {
             "related": ".xml"
           }
         }
@@ -478,19 +462,6 @@
             "assetType": "native",
             "rid": "win-x86"
           }
-        }
-      },
-      "MessageBox.Avalonia/3.3.1.1": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.1.5",
-          "DialogHost.Avalonia": "0.8.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/MsBox.Avalonia.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/MsBox.Avalonia.dll": {}
         }
       },
       "MicroCom.Runtime/0.11.0": {
@@ -774,7 +745,7 @@
         }
       }
     },
-    "net9.0/linux-x64": {
+    "net9.0/win-x64": {
       "Avalonia/11.3.12": {
         "type": "package",
         "dependencies": {
@@ -858,7 +829,10 @@
         }
       },
       "Avalonia.Angle.Windows.Natives/2.1.25547.20250602": {
-        "type": "package"
+        "type": "package",
+        "native": {
+          "runtimes/win-x64/native/av_libglesv2.dll": {}
+        }
       },
       "Avalonia.BuildServices/11.3.2": {
         "type": "package",
@@ -873,12 +847,12 @@
           "Avalonia.Remote.Protocol": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Controls.ColorPicker.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Controls.ColorPicker.dll": {
             "related": ".xml"
           }
         }
@@ -911,12 +885,12 @@
           "Avalonia.Themes.Simple": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Diagnostics.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Diagnostics.dll": {
             "related": ".xml"
           }
         }
@@ -1027,12 +1001,12 @@
           "Avalonia": "11.3.12"
         },
         "compile": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Themes.Simple.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/_._": {
+          "lib/net8.0/Avalonia.Themes.Simple.dll": {
             "related": ".xml"
           }
         }
@@ -1078,22 +1052,6 @@
           }
         }
       },
-      "DialogHost.Avalonia/0.8.1": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/DialogHost.Avalonia.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/DialogHost.Avalonia.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "DynamicData/9.4.1": {
         "type": "package",
         "dependencies": {
@@ -1134,9 +1092,6 @@
         },
         "runtime": {
           "lib/net8.0/_._": {}
-        },
-        "native": {
-          "runtimes/linux-x64/native/libHarfBuzzSharp.so": {}
         }
       },
       "HarfBuzzSharp.NativeAssets.macOS/8.3.1.1": {
@@ -1168,19 +1123,9 @@
         },
         "runtime": {
           "lib/net8.0/_._": {}
-        }
-      },
-      "MessageBox.Avalonia/3.3.1.1": {
-        "type": "package",
-        "dependencies": {
-          "Avalonia": "11.1.5",
-          "DialogHost.Avalonia": "0.8.1"
         },
-        "compile": {
-          "lib/netstandard2.0/MsBox.Avalonia.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/MsBox.Avalonia.dll": {}
+        "native": {
+          "runtimes/win-x64/native/libHarfBuzzSharp.dll": {}
         }
       },
       "MicroCom.Runtime/0.11.0": {
@@ -1265,9 +1210,6 @@
         },
         "runtime": {
           "lib/net6.0/_._": {}
-        },
-        "native": {
-          "runtimes/linux-x64/native/libSkiaSharp.so": {}
         }
       },
       "SkiaSharp.NativeAssets.macOS/2.88.9": {
@@ -1299,6 +1241,9 @@
         },
         "runtime": {
           "lib/net6.0/_._": {}
+        },
+        "native": {
+          "runtimes/win-x64/native/libSkiaSharp.dll": {}
         }
       },
       "Splat/19.3.1": {
@@ -1852,21 +1797,6 @@
         "lib/netstandard2.0/Avalonia.X11.xml"
       ]
     },
-    "DialogHost.Avalonia/0.8.1": {
-      "sha512": "RLBOMqjJPgSmwe0i1pzX3Q7Pn0i4xE/E1b774krd4VyEkaorz1AYMdYQHyIfuhtQv5NntZyS0MuQbxJl/PhzBg==",
-      "type": "package",
-      "path": "dialoghost.avalonia/0.8.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "dialoghost.avalonia.0.8.1.nupkg.sha512",
-        "dialoghost.avalonia.nuspec",
-        "icon.png",
-        "lib/netstandard2.0/DialogHost.Avalonia.dll",
-        "lib/netstandard2.0/DialogHost.Avalonia.xml"
-      ]
-    },
     "DynamicData/9.4.1": {
       "sha512": "+SoDTbuzY9j0K+sZfRbbVpGjjylkVMhUQnw6qiPhxzYLBJlwxFpmunXSaNBtTxwC2C9d/XIp0kO7VhMAVuUt7w==",
       "type": "package",
@@ -2051,19 +1981,6 @@
         "runtimes/win-x86/native/libHarfBuzzSharp.dll"
       ]
     },
-    "MessageBox.Avalonia/3.3.1.1": {
-      "sha512": "a0NocLvE0ipg0REevrMtilNI+ud+tFTJW7YrPtploeM93ew8S3Y6hEybqZ7W9q5Yqa9u+xOrOjAlG1lTihWhnQ==",
-      "type": "package",
-      "path": "messagebox.avalonia/3.3.1.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "icon.jpg",
-        "lib/netstandard2.0/MsBox.Avalonia.dll",
-        "messagebox.avalonia.3.3.1.1.nupkg.sha512",
-        "messagebox.avalonia.nuspec"
-      ]
-    },
     "MicroCom.Runtime/0.11.0": {
       "sha512": "MEnrZ3UIiH40hjzMDsxrTyi8dtqB5ziv3iBeeU4bXsL/7NLSal9F1lZKpK+tfBRnUoDSdtcW3KufE4yhATOMCA==",
       "type": "package",
@@ -2078,12 +1995,13 @@
       ]
     },
     "Microsoft.NET.ILLink.Tasks/9.0.14": {
-      "sha512": "isGVS2SwcSqx62mH1NIC2iQv9kcIW+LYBEzA8YBnNjf+LvRZHksT6VGcBIXxtEvypBOy+wYjLl3Ej7tpxjgYzA==",
+      "sha512": "+MeWjj5sGq6Oj/l0E9RPMgXDyCIPxczzCbGuvuVTZFEGiy2S/atsfoAoKUnkEin/GeGpN+HenCzRmiQKSc99eQ==",
       "type": "package",
       "path": "microsoft.net.illink.tasks/9.0.14",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "Sdk/Sdk.props",
@@ -2095,6 +2013,22 @@
         "build/Microsoft.NET.ILLink.targets",
         "microsoft.net.illink.tasks.9.0.14.nupkg.sha512",
         "microsoft.net.illink.tasks.nuspec",
+        "tools/net472/ILLink.Tasks.dll",
+        "tools/net472/ILLink.Tasks.dll.config",
+        "tools/net472/Mono.Cecil.Mdb.dll",
+        "tools/net472/Mono.Cecil.Pdb.dll",
+        "tools/net472/Mono.Cecil.Rocks.dll",
+        "tools/net472/Mono.Cecil.dll",
+        "tools/net472/Sdk/Sdk.props",
+        "tools/net472/System.Buffers.dll",
+        "tools/net472/System.Collections.Immutable.dll",
+        "tools/net472/System.Memory.dll",
+        "tools/net472/System.Numerics.Vectors.dll",
+        "tools/net472/System.Reflection.Metadata.dll",
+        "tools/net472/System.Runtime.CompilerServices.Unsafe.dll",
+        "tools/net472/build/Microsoft.NET.ILLink.Analyzers.props",
+        "tools/net472/build/Microsoft.NET.ILLink.Tasks.props",
+        "tools/net472/build/Microsoft.NET.ILLink.targets",
         "tools/net9.0/ILLink.Tasks.deps.json",
         "tools/net9.0/ILLink.Tasks.dll",
         "tools/net9.0/Mono.Cecil.Mdb.dll",
@@ -2603,7 +2537,6 @@
       "Avalonia.Diagnostics >= 11.3.12",
       "Avalonia.Fonts.Inter >= 11.3.12",
       "Avalonia.Themes.Fluent >= 11.3.12",
-      "MessageBox.Avalonia >= 3.3.1.1",
       "Microsoft.NET.ILLink.Tasks >= 9.0.14",
       "Newtonsoft.Json >= 13.0.5-beta1",
       "Packaging.Targets >= 0.1.232-*",
@@ -2611,25 +2544,33 @@
     ]
   },
   "packageFolders": {
-    "/home/bsr/.nuget/packages/": {}
+    "C:\\Users\\123\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/bsr/RiderProjects/AvaloniaApplication1/observerLm/observerLm.csproj",
+      "projectUniqueName": "C:\\Users\\123\\RiderProjects\\observer_lm\\observerLm\\observerLm.csproj",
       "projectName": "observerLm",
-      "projectPath": "/home/bsr/RiderProjects/AvaloniaApplication1/observerLm/observerLm.csproj",
-      "packagesPath": "/home/bsr/.nuget/packages/",
-      "outputPath": "/home/bsr/RiderProjects/AvaloniaApplication1/observerLm/obj/",
+      "projectPath": "C:\\Users\\123\\RiderProjects\\observer_lm\\observerLm\\observerLm.csproj",
+      "packagesPath": "C:\\Users\\123\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\123\\RiderProjects\\observer_lm\\observerLm\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/bsr/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\123\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/lib/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Users\\123\\Desktop\\dll_pack": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2648,7 +2589,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -2663,8 +2604,6 @@
             "version": "[11.3.12, )"
           },
           "Avalonia.Diagnostics": {
-            "include": "None",
-            "suppressParent": "All",
             "target": "Package",
             "version": "[11.3.12, )"
           },
@@ -2675,10 +2614,6 @@
           "Avalonia.Themes.Fluent": {
             "target": "Package",
             "version": "[11.3.12, )"
-          },
-          "MessageBox.Avalonia": {
-            "target": "Package",
-            "version": "[3.3.1.1, )"
           },
           "Microsoft.NET.ILLink.Tasks": {
             "suppressParent": "All",
@@ -2713,15 +2648,15 @@
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.AspNetCore.App.Runtime.linux-x64",
+            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
             "version": "[9.0.14, 9.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.linux-x64",
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
             "version": "[9.0.14, 9.0.14]"
           },
           {
-            "name": "Microsoft.NETCore.App.Runtime.linux-x64",
+            "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
             "version": "[9.0.14, 9.0.14]"
           }
         ],
@@ -2730,11 +2665,11 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.115/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
-      "linux-x64": {
+      "win-x64": {
         "#import": []
       }
     }

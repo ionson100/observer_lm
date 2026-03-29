@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using MsBox.Avalonia;
 using System;
 using System.Linq;
 
@@ -69,17 +68,14 @@ public partial class CodeDialog : Window
         }
     }
 
-    private void GetCodes_Click(object? sender, RoutedEventArgs e)
+    private async void GetCodes_Click(object? sender, RoutedEventArgs e)
     {
         if (int.TryParse(TxtSkip.Text, out int skip) && int.TryParse(TxtLimit.Text, out int limit))
         {
             // Проверка диапазона для Limit
             if (limit < 1 || limit > 1000)
             {
-                MessageBoxManager
-                    .GetMessageBoxStandard("Ошибка", "Лимит должен быть в диапазоне от 1 до 1000.")
-                    .ShowAsync();
-                
+                await MessageDialog.Show("Ошибка", "Лимит должен быть в диапазоне от 1 до 1000.");
                 return;
             }
 
@@ -90,10 +86,7 @@ public partial class CodeDialog : Window
         }
         else
         {
-            MessageBoxManager
-                .GetMessageBoxStandard("Ошибка", "Введите корректные числа.")
-                .ShowAsync();
-         
+            await MessageDialog.Show("Ошибка", "Введите корректные числа.");
         }
     }
 }

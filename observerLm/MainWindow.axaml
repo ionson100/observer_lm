@@ -2,10 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:observerLm.controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="observerLm.MainWindow"
         Title="Local Module (LM)">
-    <Grid ShowGridLines="False" Margin="0">
+    <Panel>
+     <Grid ShowGridLines="False" Margin="0">
        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -31,5 +33,17 @@
                      IsVisible="False"
                      Width="50" Height="50"/>
         
+        
+        
     </Grid>
+        <controls:NotificationControl  Name="MyNotification" 
+                                   
+                                      Background="Transparent"
+                                      ZIndex="1000"
+                                      IsVisible="False"
+                                      HorizontalAlignment="Right" 
+                                      VerticalAlignment="Bottom" 
+                                      Margin="50"/>
+        <Panel ZIndex="999" Name="PanelBlur" Opacity="0.3" IsVisible="False" Background="#93989C"></Panel>
+    </Panel>
 </Window>
