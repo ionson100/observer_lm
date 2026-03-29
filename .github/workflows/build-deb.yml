@@ -1,5 +1,3 @@
-
-
 name: Build Cross-Platform Release
 
 on:
@@ -19,13 +17,19 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Publish EXE
-        # Собираем SingleFile EXE со сжатием и обрезкой (если настроено в csproj)
         run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish-win
 
-      - name: Upload EXE to Release
+      - name: Copy help.html to publish directory
+        run: |
+          cp ./observerLm/help.html ./publish-win/help.html
+         
+
+      - name: Upload EXE and help.html to Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./publish-win/*.exe
+          files: |
+            ./publish-win/*.exe
+            ./publish-win/help.html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,19 +48,15 @@ jobs:
 
       - name: Build DEB Package
         run: |
-          # 1. Получаем чистую версию (v1.0.0 -> 1.0.0)
           CLEAN_VERSION=$(echo ${GITHUB_REF_NAME} | sed 's/v//')
           
-          # 2. Подставляем версию в ваш файл control
           sed -i "s/^Version:.*$/Version: $CLEAN_VERSION/" ./observerlm-deb/DEBIAN/control
           
-          # 3. Подготовка структуры и прав
           mkdir -p ./observerlm-deb/usr/local/bin/
           cp ./temp-bin/observerLm ./observerlm-deb/usr/local/bin/
           chmod +x ./observerlm-deb/usr/local/bin/observerLm
           chmod -R 755 ./observerlm-deb/DEBIAN/
           
-          # 4. Сборка пакета
           dpkg-deb --build observerlm-deb "observerlm-${CLEAN_VERSION}-linux-x64.deb"
 
       - name: Upload DEB to Release
