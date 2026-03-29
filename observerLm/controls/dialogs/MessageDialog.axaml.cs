@@ -116,7 +116,7 @@ public partial class MessageDialog : Window
         {
            
                 
-            Button button = (Button)sender!;
+            var button = (Button)sender!;
             switch (button!)
             {
                 case { CommandParameter: "bt1" }:

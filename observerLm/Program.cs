@@ -26,18 +26,18 @@ class Program
 //dpkg-deb --build observerlm-deb "observerlm-deb_$(grep '^Version:' observerlm-deb/DEBIAN/control | awk '{print $2}').deb"
     
     
-    private static bool _isShowingError = false;
+    private static bool _isShowingError;
     [STAThread]
     public static void Main(string[] args)
     {
         // 1. Ошибки в синхронном коде и основном потоке
-        AppDomain.CurrentDomain.UnhandledException += (sender, e) => 
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => 
         {
             LogException(e.ExceptionObject as Exception, "AppDomain");
         };
 
         // 2. Ошибки в асинхронных задачах (Task)
-        TaskScheduler.UnobservedTaskException += (sender, e) => 
+        TaskScheduler.UnobservedTaskException += (_, e) => 
         {
             LogException(e.Exception, "TaskScheduler");
             e.SetObserved(); // предотвращает падение приложения, если это возможно
@@ -56,7 +56,7 @@ class Program
 
     private static void SettingsCreator()
     {
-        string configDir = Path.Combine(
+        var configDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
             "observerLm" // Имя вашей программы
         );
@@ -64,10 +64,10 @@ class Program
         {
             Directory.CreateDirectory(configDir);
         }
-        string filePath = Path.Combine(configDir, "settings.json");
+        var filePath = Path.Combine(configDir, "settings.json");
         if (!File.Exists(filePath))
         {
-            MySettings mySettings = new MySettings
+            var mySettings = new MySettings
             {
                 Auth = "YWRtaW46YWRtaW4=",
                 Url = "http://localhost:5995/api/v2/",
@@ -82,43 +82,50 @@ class Program
             {
                 mySettings.FolderLog ="/var/log/regime";
             }
-            string jsonString = JsonConvert.SerializeObject(mySettings, Formatting.Indented);
+            var jsonString = JsonConvert.SerializeObject(mySettings, Formatting.Indented);
             File.WriteAllText(filePath, jsonString);
         }
     }
 
     private static void LogException(Exception? ex, string source)
     {
-        string fullMessage = $"[{source}] {ex?.GetType().Name}: {ex?.Message}\n{ex?.StackTrace}";
+        var fullMessage = $"[{source}] {ex?.GetType().Name}: {ex?.Message}\n{ex?.StackTrace}";
         Console.WriteLine(fullMessage);
 
         // Вызываем UI поток
-        Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
+        Avalonia.Threading.Dispatcher.UIThread.Post(async void () =>
         {
-            if (_isShowingError) return;
-            _isShowingError = true;
-
             try
             {
-                var errorWin = new ErrorWindow(fullMessage);
+                if (_isShowingError) return;
+                _isShowingError = true;
 
-                // Пытаемся найти главное окно, чтобы заблокировать его (Modal)
-                var lifetime = Application.Current?.ApplicationLifetime
-                    as Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime;
+                try
+                {
+                    var errorWin = new ErrorWindow(fullMessage);
 
-                if (lifetime?.MainWindow != null)
-                    await errorWin.ShowDialog(lifetime.MainWindow);
-                else
-                    errorWin.Show(); // Если главного окна еще нет (ошибка при старте)
+                    // Пытаемся найти главное окно, чтобы заблокировать его (Modal)
+                    var lifetime = Application.Current?.ApplicationLifetime
+                        as Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime;
+
+                    if (lifetime?.MainWindow != null)
+                        await errorWin.ShowDialog(lifetime.MainWindow);
+                    else
+                        errorWin.Show(); // Если главного окна еще нет (ошибка при старте)
+                }
+                catch (Exception fatal)
+                {
+                    // Если даже окно ошибки упало, просто пишем в консоль
+                    Console.WriteLine("Fatal error displaying error window: " + fatal.Message);
+                }
+                finally
+                {
+                    _isShowingError = false;
+                }
             }
-            catch (Exception fatal)
+            catch (Exception e)
             {
-                // Если даже окно ошибки упало, просто пишем в консоль
-                Console.WriteLine("Fatal error displaying error window: " + fatal.Message);
-            }
-            finally
-            {
-                _isShowingError = false;
+                MessageDialog.Show("Error", e.Message);
             }
         });
     }

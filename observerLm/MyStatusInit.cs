@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using observerLm.controls.dialogs;
 
 namespace observerLm;
 
@@ -33,7 +32,7 @@ public class MyStatusInit
     /// </summary>
     public async Task RequestInitAsync(Action<string?, string?>? action)
     {
-        var tempInit = new TempInit { Token = (await GetSettingsOrWarn())?.Token };
+        var tempInit = new TempInit { Token = (await GetSettingsOrWarn()).Token };
         if (tempInit.Token == null) return;
 
         await ExecuteRequestAsync(
@@ -50,7 +49,7 @@ public class MyStatusInit
     /// </summary>
     public async Task RequestSellAsync(string appendUrl, string code, Action<string, string> action)
     {
-        var tempSell = new TempSell { CisList = new List<string> { code } };
+        var tempSell = new TempSell { CisList = [code] };
         await ExecuteRequestAsync(
             (client, url, content) => client.PostAsync(url, content),
             appendUrl,
@@ -76,18 +75,14 @@ public class MyStatusInit
         Func<int, string, string, string?, string> onError,
         Action<string?, string?>? callback)
     {
-        string requestLog = "";
+        var requestLog = "";
         string? url = null;
         string? json = null;
 
         try
         {
             var settings = await GetSettingsOrWarn();
-            if (settings == null)
-            {
-                callback?.Invoke(null, null);
-                return;
-            }
+           
 
             using var handler = new CurlLoggingHandler(new HttpClientHandler(), s => requestLog = s);
             using var httpClient = new HttpClient(handler);
@@ -104,7 +99,7 @@ public class MyStatusInit
             var responseBody = await response.Content.ReadAsStringAsync();
             var statusCode = (int)response.StatusCode;
 
-            string result = statusCode == 200
+            var result = statusCode == 200
                 ? onSuccess(responseBody)
                 : onError(statusCode, responseBody, url, json);
 
@@ -112,7 +107,7 @@ public class MyStatusInit
         }
         catch (Exception ex)
         {
-            string error = $"Ошибка при запросе к LM. Exception:{Environment.NewLine}{ex.Message}";
+            var error = $"Ошибка при запросе к LM. Exception:{Environment.NewLine}{ex.Message}";
             if (!string.IsNullOrEmpty(url)) error += $"{Environment.NewLine}Url: {url}";
             if (!string.IsNullOrEmpty(json)) error += $"{Environment.NewLine}JSON: {json}";
 
@@ -123,14 +118,11 @@ public class MyStatusInit
     /// <summary>
     /// Загружает настройки или показывает ошибку.
     /// </summary>
-    private async Task<MySettings?> GetSettingsOrWarn()
+    private Task<MySettings> GetSettingsOrWarn()
     {
-        var settings = await MySettings.GetSettings();
-        if (settings == null)
-        {
-            await MessageDialog.Show("Ошибка", "Настройки приложения не заданы");
-        }
-        return settings;
+        var settings = MySettings.Settings;
+       
+        return Task.FromResult(settings);
     }
 
     /// <summary>

@@ -16,10 +16,11 @@ namespace observerLm.controls;
 
 public partial class CheckingControl : UserControl
 {
-    private MySettings? _settings;
+    private readonly MySettings _settings;
 
     public CheckingControl()
     {
+        _settings=MySettings.Settings;
         InitializeComponent();
         
         Loaded += (_, _) => InputTextBox.Focus();
@@ -63,13 +64,9 @@ public partial class CheckingControl : UserControl
 
     private async void CheckButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_settings == null)
-        {
-            await MessageDialog.Show("Ошибка", "Настройки приложения не загружены.");
-            return;
-        }
+        
 
-        string? code = InputTextBox.Text?.Trim();
+        var code = InputTextBox.Text?.Trim();
         if (string.IsNullOrWhiteSpace(code))
         {
             await MessageDialog.Show("Ошибка", "Пожалуйста, введите код для проверки.");
@@ -77,11 +74,11 @@ public partial class CheckingControl : UserControl
             return;
         }
 
-        string? groupText = InputTextBoxGroup?.Text?.Trim();
+        var groupText = InputTextBoxGroup?.Text?.Trim();
 
         if (!string.IsNullOrWhiteSpace(groupText))
         {
-            if (!int.TryParse(groupText, out int groupValue) || groupValue <= 0)
+            if (!int.TryParse(groupText, out var groupValue) || groupValue <= 0)
             {
                 await MessageDialog.Show("Ошибка", "Введите корректную группу товара (целое число > 0).");
                 InputTextBoxGroup?.Focus();
@@ -113,37 +110,15 @@ public partial class CheckingControl : UserControl
     }
 
     //0104670540176099215'W9Um
-    protected override async void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-        await LoadSettingsAsync();
-    }
+   
 
-    private async Task LoadSettingsAsync()
-    {
-        try
-        {
-            _settings = await MySettings.GetSettings();
-            if (_settings == null)
-            {
-                await MessageDialog.Show("Ошибка", "Не удалось загрузить настройки приложения.");
-            }
-        }
-        catch (Exception ex)
-        {
-            await MessageDialog.Show("Ошибка", $"Критическая ошибка при загрузке настроек: {ex.Message}");
-        }
-    }
+   
 
     private async Task RequestCodeCheckAsync(string code, int? group, Action<string, string>? action)
     {
-        if (_settings == null)
-        {
-            action?.Invoke("Ошибка: настройки не загружены.", "");
-            return;
-        }
+       
 
-        string requestLog = "";
+        var requestLog = "";
         string? url = null;
         string? json = null;
 

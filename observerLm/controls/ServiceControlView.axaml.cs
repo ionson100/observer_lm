@@ -94,7 +94,7 @@ namespace observerLm.controls
         {
             try
             {
-                Button button = ((Button)sender!);
+                var button = ((Button)sender!);
                 if (button.Tag != null)
                     switch (button.Tag.ToString())
                     {
@@ -144,8 +144,8 @@ public static class ServiceManager
     /// <returns></returns>
     public static async Task<(string Status, bool IsRunning)> GetStatusAsync(string serviceName)
     {
-        string cmd = IsWindows ? "sc" : "systemctl";
-        string args = IsWindows ? $"query {serviceName}" : $"is-active {serviceName}";
+        var cmd = IsWindows ? "sc" : "systemctl";
+        var args = IsWindows ? $"query {serviceName}" : $"is-active {serviceName}";
 
         var output = await RunProcessAsync(cmd, args);
 
@@ -158,7 +158,7 @@ public static class ServiceManager
         }
         else // Linux
         {
-            bool isActive = output.Trim() == "active";
+            var isActive = output.Trim() == "active";
             return (isActive ? "Запущен" : "Остановлен", isActive);
         }
     }
@@ -172,8 +172,8 @@ public static class ServiceManager
     public static async Task<(bool Success, string Error)> SendCommandAsync(string action, string serviceName)
     {
         // Для Windows используем 'net', для Linux 'systemctl'
-        string cmd = IsWindows ? "net" : "systemctl";
-        string args = $"{action} {serviceName}";
+        var cmd = IsWindows ? "net" : "systemctl";
+        var args = $"{action} {serviceName}";
 
         return await RunProcessWithResultAsync(cmd, args);
     }
@@ -220,7 +220,7 @@ public static class ServiceManager
             if (proc == null) return (false, "Не удалось запустить процесс");
             
             await proc.WaitForExitAsync();
-            string error = await proc.StandardError.ReadToEndAsync();
+            var error = await proc.StandardError.ReadToEndAsync();
             return (proc.ExitCode == 0, error);
         }
         catch (Exception ex) { return (false, ex.Message); }

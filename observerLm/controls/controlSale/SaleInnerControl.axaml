@@ -5,15 +5,7 @@
              xmlns:controls="clr-namespace:observerLm.controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="observerLm.controls.controlSale.SaleInnerControl">
-    <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-           
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-       
+    <Grid Margin="5" RowDefinitions="Auto,Auto,*">
 
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5,10,15">

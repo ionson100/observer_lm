@@ -6,7 +6,7 @@ using observerLm.controls.dialogs;
 
 namespace observerLm;
 
-public class MySettings
+public class MySettings 
 {
     /// <summary>
     /// Путь к API локального модуля. Например: http://localhost:8080/api/v1/
@@ -31,17 +31,17 @@ public class MySettings
     /// </summary>
     public int Tail { get; set; } = 100;
 
-    public static async Task<MySettings?> GetSettings()
+    private static async Task<MySettings?> GetSettings()
     {
         try
         {
-            string path = Path.Combine(
+            var path = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
                 "observerLm","settings.json");
             
             if (File.Exists(path))
             {
-                string str = File.ReadAllText(path);
+                var str = File.ReadAllText(path);
                 var settings = JsonConvert.DeserializeObject<MySettings>(str);
                 return settings;
             }
@@ -55,5 +55,30 @@ public class MySettings
            return null;
         }
 
+    }
+    private static MySettings? _instance;
+
+    public static MySettings Settings
+    {
+        get
+        {
+            _instance ??= GetSettings().ConfigureAwait(false).GetAwaiter().GetResult();
+            return _instance ??throw new NullReferenceException();
+        }
+    }
+
+    public static async void Save()
+    {
+        try
+        {
+            var path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+                "observerLm","settings.json");
+            await File.WriteAllTextAsync(path,JsonConvert.SerializeObject(_instance, Formatting.Indented));
+        }
+        catch (Exception e)
+        {
+           await MessageDialog.Show("Error save setting",e.Message);
+        }
     }
 }

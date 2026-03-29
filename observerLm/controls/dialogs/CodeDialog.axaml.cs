@@ -70,7 +70,7 @@ public partial class CodeDialog : Window
 
     private async void GetCodes_Click(object? sender, RoutedEventArgs e)
     {
-        if (int.TryParse(TxtSkip.Text, out int skip) && int.TryParse(TxtLimit.Text, out int limit))
+        if (int.TryParse(TxtSkip.Text, out var skip) && int.TryParse(TxtLimit.Text, out var limit))
         {
             // Проверка диапазона для Limit
             if (limit < 1 || limit > 1000)

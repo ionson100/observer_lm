@@ -24,7 +24,7 @@ public partial class SettingsControl : UserControl
     {
         try
         {
-            _settings = await MySettings.GetSettings();
+            _settings = MySettings.Settings;
             if (_settings == null) return;
 
             // Привязка данных через свойства (или можно использовать MVVM)
@@ -86,7 +86,7 @@ public partial class SettingsControl : UserControl
         try
         {
             if(_settings==null) return;
-            bool res= await Validate();
+            var res= await Validate();
             if (res)
             {
                 _settings.FolderLog= TxtFolderPath.Text!.Trim();
@@ -94,10 +94,8 @@ public partial class SettingsControl : UserControl
                 _settings.Token= TxtToken.Text!.Trim();
                 _settings.Url= TxtUrl.Text!.Trim();
                 _settings.Tail= int.Parse(TxtTail.Text!.Trim());
-                string path = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-                    "observerLm","settings.json");
-                await File.WriteAllTextAsync(path,JsonConvert.SerializeObject(_settings, Formatting.Indented));
+
+                MySettings.Save();
 
                 MainWindow.Instance!.MyNotification.Show("Настройки успешно сохранены.");
                
@@ -152,7 +150,7 @@ public partial class SettingsControl : UserControl
             return false;
         }
 
-        if (!int.TryParse(TxtTail.Text!.Trim(), out int tailValue) || tailValue <= 0)
+        if (!int.TryParse(TxtTail.Text!.Trim(), out var tailValue) || tailValue <= 0)
         {
             await ShowWarning("Tail должно содержать целое число больше нуля.", TxtTail);
             return false;

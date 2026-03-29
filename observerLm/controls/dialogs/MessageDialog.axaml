@@ -56,7 +56,7 @@
                  AcceptsReturn="True" 
                  MaxHeight="500"
                  VerticalAlignment="Center"
-                
+                 IsReadOnly="True"
                  Classes="clean"
                    HorizontalAlignment="Center"
                    Name="TextBlockMessage"

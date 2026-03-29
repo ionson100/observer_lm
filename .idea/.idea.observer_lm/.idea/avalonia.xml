@@ -21,6 +21,8 @@
         <entry key="observerLm/App.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/MainWindow.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/CheckingControl.axaml" value="observerLm/observerLm.csproj" />
+        <entry key="observerLm/controls/CpuViewModel .axaml" value="observerLm/observerLm.csproj" />
+        <entry key="observerLm/controls/CpuWidget.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/CurlControl.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/HelpController.axaml" value="observerLm/observerLm.csproj" />
         <entry key="observerLm/controls/LogControl2.axaml" value="observerLm/observerLm.csproj" />

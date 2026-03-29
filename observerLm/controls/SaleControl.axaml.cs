@@ -28,7 +28,7 @@ public partial class SaleControl : UserControl
     {
         try
         {
-            Button button = (Button)sender!;
+            var button = (Button)sender!;
             if (button.Tag != null)
                 switch (button.Tag.ToString())
                 {
@@ -49,7 +49,7 @@ public partial class SaleControl : UserControl
                     }
                     case "bsalelist":
                     {
-                        CodeDialog dialog = new CodeDialog();
+                        var dialog = new CodeDialog();
                         var topLevel = TopLevel.GetTopLevel(this);
                         if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                         {

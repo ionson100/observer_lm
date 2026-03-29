@@ -9,7 +9,7 @@
             <!-- Верхняя панель. Height установим из кода при загрузке -->
             <RowDefinition Height="1*" MinHeight="50"/> 
             <RowDefinition Height="Auto"/> <!-- Для сплиттера -->
-            <RowDefinition Height="1*" MinHeight="50"/> <!-- Нижняя панель -->
+            <RowDefinition Height="2*" MinHeight="50"/> <!-- Нижняя панель -->
         </Grid.RowDefinitions>
      
 
@@ -32,7 +32,7 @@
         </Border>
 
         <!-- Разделитель (горизонтальный) -->
-        <GridSplitter Grid.Row="1" Height="2" Background="#2B083308" 
+        <GridSplitter Grid.Row="1" Height="2" Background="#2B083308" DragCompleted="Thumb_OnDragCompleted"
                       HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext"/>
 
         <Border Grid.Row="2" Background="#1e1e1e">

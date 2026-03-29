@@ -23,7 +23,7 @@ public partial class MainWindow : Window
 
     private async void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        Button button = (Button)sender!;
+        var button = (Button)sender!;
         if(button.Tag==null)return;
         button.Focus(NavigationMethod.Tab);
         switch (button.Tag.ToString())
@@ -137,10 +137,10 @@ public partial class MainWindow : Window
             }
             case "bhelp":
             {
-                string ?path=await GetHelpFilePath();
+                var path=await GetHelpFilePath();
                 if (!string.IsNullOrEmpty(path))
                 {
-                    string url = "file://" + path;
+                    var url = "file://" + path;
                     BrowserHelper.OpenUrl(url);
                 }
                 break;

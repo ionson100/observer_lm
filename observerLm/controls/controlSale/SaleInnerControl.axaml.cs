@@ -12,24 +12,13 @@ public partial class SaleInnerControl : UserControl
     {
         _salesType = salesType;
         InitializeComponent();
-        switch (salesType)
+        CheckButton.Content = salesType switch
         {
-            case SalesType.Sales:
-            {
-                CheckButton.Content = "Продать товар";
-                break;
-            }
-            case SalesType.ReturnSales:
-            {
-                CheckButton.Content = "Вернуть из продажи";
-                break;
-            }
-            case SalesType.CheckSales:
-            {
-                CheckButton.Content = "Проверить на проданность";
-                break;
-            }
-        }
+            SalesType.Sales => "Продать товар",
+            SalesType.ReturnSales => "Вернуть из продажи",
+            SalesType.CheckSales => "Проверить на проданность",
+            _ => CheckButton.Content
+        };
 
         Loaded += (_, _) =>
         {
@@ -43,27 +32,13 @@ public partial class SaleInnerControl : UserControl
     {
           if (string.IsNullOrWhiteSpace(InputTextBox.Text))
           {
-              string message = "";
-              switch (_salesType)
+              var message = _salesType switch
               {
-                  case SalesType.Sales:
-                  {
-                      message = "Введите код для продажи";
-                      break;
-                  }
-                  case SalesType.ReturnSales:
-                  {
-                      message = "Введите код для возврата";
-                      break;
-                  }
-                  case SalesType.CheckSales:
-                  {
-                      message = "Введите код для проверки";
-                      break;
-                  }
-              }
-
-
+                  SalesType.Sales => "Введите код для продажи",
+                  SalesType.ReturnSales => "Введите код для возврата",
+                  SalesType.CheckSales => "Введите код для проверки",
+                  _ => ""
+              };
 
               await MessageDialog.Show("Ошибка", "Внимание! " + message);
             InputTextBox.Focus();

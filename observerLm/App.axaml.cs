@@ -1,14 +1,18 @@
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
 namespace observerLm;
 
+
 public partial class App : Application
 {
+    
     public  const string ApplicationJson = "application/json";
     public override void Initialize()
     {
+        
         AvaloniaXamlLoader.Load(this);
     }
 

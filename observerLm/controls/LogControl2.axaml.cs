@@ -6,6 +6,7 @@ using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
@@ -37,7 +38,6 @@ public partial class LogControl2 : UserControl,IDisposable
  
     private readonly CancellationTokenSource _cts1=new CancellationTokenSource();
     private readonly CancellationTokenSource _cts2=new CancellationTokenSource();
-    private readonly MySettings? _mySettings =  MySettings.GetSettings().Result;
 
     protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
     {
@@ -48,16 +48,12 @@ public partial class LogControl2 : UserControl,IDisposable
     public LogControl2()
     {
         InitializeComponent();
+        var mySettings = MySettings.Settings;
         ListBox1.ItemsSource = Lines1;
         ListBox2.ItemsSource = Lines2;
-        if (_mySettings == null)
-        {
-            Lines1.Add("Не найдены настройки программы. Папка settings не существует");
-            Lines2.Add(Lines1[0]);
-            return;
-        }
+        
 
-        if (string.IsNullOrWhiteSpace(_mySettings!.FolderLog))
+        if (string.IsNullOrWhiteSpace(mySettings.FolderLog))
         {
             Lines1.Add("Путь к папке логов пустой или отсутствует в настройках.");
             Lines2.Add(Lines1[0]);
@@ -65,8 +61,8 @@ public partial class LogControl2 : UserControl,IDisposable
         }
         
        
-        FilePath1 = Path.Combine(_mySettings.FolderLog,"regime.log");
-        FilePath2 = Path.Combine(_mySettings.FolderLog,"yenisei.log");
+        FilePath1 = Path.Combine(mySettings.FolderLog,"regime.log");
+        FilePath2 = Path.Combine(mySettings.FolderLog,"yenisei.log");
         
        
         DataContext = this;
@@ -76,11 +72,11 @@ public partial class LogControl2 : UserControl,IDisposable
             {
                 if (File.Exists(path))
                 {
-                    Start(path,_cts1 ,Lines1,ListBox1,_mySettings.Tail);
+                    Start(path,_cts1 ,Lines1,ListBox1,mySettings.Tail);
                 }
                 else
                 {
-                    Lines1.Add($"Файла нет:{path}");
+                    Lines1.Add($"Файл лога не найден {path}");
                 }
                 
             }
@@ -93,18 +89,18 @@ public partial class LogControl2 : UserControl,IDisposable
             {
                 if (File.Exists(path))
                 {
-                    Start(path,_cts2 ,Lines2,ListBox2,_mySettings.Tail);
+                    Start(path,_cts2 ,Lines2,ListBox2,mySettings.Tail);
                 }
                 else
                 {
-                    Lines2.Add($"Файла нет:{path}");
+                    Lines2.Add($"Файл лога не найден {path}");
                 }
             }
         });
     }
     private static void Start(string path,CancellationTokenSource?  cts,ObservableCollection<string> lines,ListBox listBox,int tail)
     {
-        LogTailService service = new LogTailService(path);
+        var service = new LogTailService(path);
        
         service.OnLines += line =>
         {
@@ -164,14 +160,14 @@ public partial class LogControl2 : UserControl,IDisposable
             if (ListBox1.SelectedItems is { Count: > 0 } && clipboard!=null)
             { 
                 var lines = ListBox1.SelectedItems.Cast<object>().Select(item => item.ToString()); 
-                string textToCopy = string.Join(Environment.NewLine, lines); 
+                var textToCopy = string.Join(Environment.NewLine, lines); 
                 await clipboard.SetTextAsync(textToCopy);
             }
             if (ListBox2.SelectedItems is { Count: > 0 } && clipboard!=null)
             {
              
                 var lines = ListBox2.SelectedItems.Cast<object>().Select(item => item.ToString());
-                string textToCopy = string.Join(Environment.NewLine, lines);
+                var textToCopy = string.Join(Environment.NewLine, lines);
                 await clipboard.SetTextAsync(textToCopy);
              
             }
@@ -181,5 +177,11 @@ public partial class LogControl2 : UserControl,IDisposable
             await MessageDialog.Show("Ошибка", ex.Message);
 
         }
+    }
+
+    private void Thumb_OnDragCompleted(object? sender, VectorEventArgs e)
+    {
+        ListBox1.ScrollIntoView(Lines1[^1]);
+        ListBox2.ScrollIntoView(Lines2[^1]);
     }
 }
