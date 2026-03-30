@@ -51,9 +51,9 @@ jobs:
         run: |
           CLEAN_VERSION=$(echo ${GITHUB_REF_NAME} | sed 's/v//')
           sed -i "s/^Version:.*$/Version: $CLEAN_VERSION/" ./observerlm-deb/DEBIAN/control
-          mkdir -p ./observerlm-deb/usr/local/bin/
-          cp ./temp-bin/observerLm ./observerlm-deb/usr/local/bin/
-          chmod +x ./observerlm-deb/usr/local/bin/observerLm
+          mkdir -p ./observerlm-deb/usr/bin/
+          cp ./temp-bin/observerLm ./observerlm-deb/usr/bin/
+          chmod +x ./observerlm-deb/usr/bin/observerLm
           chmod -R 755 ./observerlm-deb/DEBIAN/
           dpkg-deb --build observerlm-deb "observerlm-${CLEAN_VERSION}-linux-x64.deb"
 

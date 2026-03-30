@@ -1,7 +1,8 @@
 Package: observerLm
-Version: 1.0.0
+Version: 2.0.2
 Section: utils
 Priority: optional
 Architecture: amd64
+Installed-Size: 94296
 Maintainer: ion100 <ionson100@gmail.com>
 Description: ObserverLm application
