@@ -54,7 +54,7 @@ if [ -d "$DEB_FOLDER" ]; then
         chmod -R 755 "$DEB_FOLDER/DEBIAN/"
         
         echo "--- Упаковка .deb пакета ---"
-        dpkg-deb --build "$DEB_FOLDER" "$OUTPUT_DIR/${APP_NAME}_${VERSION}_amd64.deb"
+        dpkg-deb --build "$DEB_FOLDER" "$OUTPUT_DIR/${APP_NAME}_${VERSION}.deb"
     else
         echo "Предупреждение: Сборка .deb возможна только в среде Linux (WSL). Пропускаем упаковку."
     fi
